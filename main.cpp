@@ -12,12 +12,15 @@ template<class CellType> using Grid = grids::RadialGrid<CellType>;
 
 int main() 
 {
-	typedef unit::RadialCell<data::Var1phase> Cell;
+	typedef units::RadialCell<data::Var1phase> Cell;
 	typedef Cell::Variable Variable;
 	typedef models::AbstractModel<Cell, Grid> Model;
+	Cell a;
 
 	Model model;
 	//cout << data::Pressure::name << endl;
+
+	cout << sizeof(units::RadialCell<data::Var1phase>) << endl;
 
 	while (true)
 	{

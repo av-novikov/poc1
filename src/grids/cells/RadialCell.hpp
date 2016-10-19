@@ -2,39 +2,38 @@
 #define RADIALCELL_HPP_
 
 #include "src/grids/cells/AbstractCell.hpp"
+#include "src/grids/variables/Coordinates.hpp"
 
-namespace unit
+namespace units
 {
+	using data::Point1d;
+
 	template<typename Variable, typename DependentVariable = data::EmptyContainer>
-	class RadialCell : public AbstractCell<Variable, DependentVariable>
+	class RadialCell : public AbstractCell<Point1d, Variable, DependentVariable>
 	{
 	public:
-		Scalar r;
-		Scalar hr;
-
+		typedef AbstractCell<Point1d, Variable, DependentVariable> Base;
+	public:
 		RadialCell() {};
 
-		RadialCell(int _num, Scalar _r, Scalar _hr, Scalar _hz) :
-				AbstractCell<Variable, DependentVariable>(_num),
-				r(_r), hr(_hr)
+		RadialCell(int _num, Scalar _r, Scalar _hr, Scalar _hz) : Base(_num)
 		{
-			this->V = 2.0 * M_PI * r * hr * _hz;
+			this->coords.r = _r;
+			this->sizes.r = _hr;
+			this->V = 2.0 * M_PI * this->coords.r * this->sizes.r * _hz;
 		};
 
-		RadialCell(const RadialCell& cell) : AbstractCell<Variable, DependentVariable>(cell)
+		RadialCell(const RadialCell& cell) : Base(cell)
 		{
-			r = cell.r;	hr = cell.hr;
 		};
 
 		~RadialCell() {};
 
 		RadialCell& operator=(const RadialCell& cell)
 		{
-			AbstractCell<Variable, DependentVariable>::operator=(cell);
-			r = cell.r;	hr = cell.hr;
+			Base::operator=(cell);
 		};
 	};
-
 };
 
 #endif /* RADIALCELL_HPP_ */
