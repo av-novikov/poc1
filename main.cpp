@@ -1,20 +1,27 @@
 #include <iostream>
 
+#include "src/models/AbstractModel.hpp"
+#include "src/grids/RadialGrid.hpp"
 #include "src/grids/cells/RadialCell.hpp"
-#include "src/grids/variables/Scalars.hpp"
 
 using namespace std;
 //using namespace data;
 //using namespace unit;
 
-int main() {
-	unit::RadialCell<data::Var1phaseNIT> cell(0, 1.0, 1.0, 1.0);
-	cell.u_next.p = 1.0;
-	cell.u_next.t = 2.0;
+template<class CellType> using Grid = grids::RadialGrid<CellType>;
 
-	cout << cell.u_next;
+int main() 
+{
+	typedef unit::RadialCell<data::Var1phase> Cell;
+	typedef Cell::Variable Variable;
+	typedef models::AbstractModel<Cell, Grid> Model;
 
+	Model model;
 	//cout << data::Pressure::name << endl;
+
+	while (true)
+	{
+	}
 
 	return 0;
 };

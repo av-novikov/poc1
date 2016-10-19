@@ -21,6 +21,9 @@ namespace unit {
 	class AbstractCell 
 	{
 	public:
+		typedef Variable Variable;
+		typedef DependentVariable DependentVariable;
+	public:
 		// Number of cell in grid
 		int num;
 		// Volume of cell
