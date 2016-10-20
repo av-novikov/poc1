@@ -7,8 +7,7 @@ namespace models
 	class AbstractModel : public GridType<CellType> 
 	{
 	public:
-		typedef CellType Cell;
-		typedef GridType<CellType> Grid;
+
 	public:
 	};
 };

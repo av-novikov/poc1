@@ -12,13 +12,24 @@ namespace grids
 	template <class CellType>
 	class AbstractGrid
 	{
+	public:
+		typedef CellType Cell;
+		typedef typename Cell::Variable Variable;
+		typedef typename Cell::DependentVariable DependentVariable;
 	protected:
-		uint size;
-		Scalar V;
+		uint totalSize;
+		data::CylindricalSize sizes;
+		data::CylindricalSize sizes_ghost;
+		
+		Scalar Volume;
 		AbstractSnapshotter snapshotter;
 
 	public:
-		AbstractGrid() {};
+		AbstractGrid() 
+		{
+			totalSize = 0;
+			sizes = sizes_ghost = {0, 0, 0};
+		};
 		virtual ~AbstractGrid() {};
 
 		virtual void snapshot(uint i) const = 0;

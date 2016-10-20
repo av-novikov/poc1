@@ -6,21 +6,30 @@
 
 using namespace std;
 //using namespace data;
-//using namespace unit;
+//using namespace units;
 
-template<class CellType> using Grid = grids::RadialGrid<CellType>;
+template<typename Variable> using Grid = grids::RadialGrid<Variable>;
 
 int main() 
 {
 	typedef units::RadialCell<data::Var1phase> Cell;
 	typedef Cell::Variable Variable;
-	typedef models::AbstractModel<Cell, Grid> Model;
+	//typedef models::AbstractModel<Cell, Grid> Model;
+
+
 	Cell a;
+	Grid<Variable> grid;
+	Grid<Variable>::Geometry geom;
+	geom.r_w = 0.1;
+	geom.r_e = 100.0;
+	geom.hz = 10.0;
+	geom.size = 20;
+	geom.size_ghost = 0;
 
-	Model model;
-	//cout << data::Pressure::name << endl;
 
-	cout << sizeof(units::RadialCell<data::Var1phase>) << endl;
+	grid.load(geom);
+	//Model model;
+
 
 	while (true)
 	{

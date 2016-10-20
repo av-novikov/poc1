@@ -23,7 +23,8 @@ typedef double Scalar;
 template<uint M, uint N>
 class DefaultMatrixContainer {
 public:
-	Scalar values[M * N];
+	typedef Scalar DataType;
+	DataType values[M * N];
 };
 
 /**
@@ -33,8 +34,11 @@ public:
  * @tparam N Second matrix dimension.
  * @tparam Container Container class to hold values.
  */
-template<uint M, uint N, typename Container = DefaultMatrixContainer<M, N>>
+template<uint M, uint N, typename Container = DefaultMatrixContainer<M, N> >
 class Matrix: public Container {
+public:
+	using typename Container::DataType;
+	
 protected:
 	/**
 	 * Returns values array index of matrix component.
@@ -72,7 +76,7 @@ public:
 	 *
 	 * @param values Values to initialize matrix with.
 	 */
-	Matrix(std::initializer_list<Scalar> values);
+	Matrix(std::initializer_list<DataType> values);
 
 	/**
 	 * Returns matrix component.
@@ -82,7 +86,7 @@ public:
 	 *
 	 * @return Corresponding matrix component.
 	 */
-	Scalar operator()(const uint i, const uint j) const;
+	DataType operator()(const uint i, const uint j) const;
 
 	/**
 	 * Returns reference to matrix component, used to modify matrix content.
@@ -92,7 +96,7 @@ public:
 	 *
 	 * @return Reference to corresponding matrix component.
 	 */
-	Scalar& operator()(const uint i, const uint j);
+	DataType& operator()(const uint i, const uint j);
 
 	/**
 	 * Transposes matrix.
@@ -109,11 +113,11 @@ public:
 
 template<uint M, uint N, typename Container>
 Matrix<M, N, Container>::Matrix() {
-	static_assert(sizeof(this->values) >= sizeof(Scalar)*M*N, "Container must have enough memory to store values");
+	static_assert(sizeof(this->values) >= sizeof(DataType)*M*N, "Container must have enough memory to store values");
 }
 
 template<uint M, uint N, typename Container>
-Matrix<M, N, Container>::Matrix(std::initializer_list<Scalar> values) :
+Matrix<M, N, Container>::Matrix(std::initializer_list<DataType> values) :
 		Matrix() {
 	int i = 0;
 	for (auto value : values)
@@ -144,13 +148,13 @@ inline uint Matrix<M, N, Container>::getIndex(uint i, uint j) const {
 }
 
 template<uint M, uint N, typename Container>
-inline Scalar Matrix<M, N, Container>::operator()(const uint i,
+inline typename Container::DataType Matrix<M, N, Container>::operator()(const uint i,
 		const uint j) const {
 	return this->values[getIndex(i, j)];
 }
 
 template<uint M, uint N, typename Container>
-inline Scalar& Matrix<M, N, Container>::operator()(const uint i, const uint j) {
+inline typename Container::DataType& Matrix<M, N, Container>::operator()(const uint i, const uint j) {
 	return this->values[getIndex(i, j)];
 }
 
@@ -404,7 +408,7 @@ Matrix<M, M, Container> operator*(const Matrix<M, M, Container>& m1,
  */
 template<uint M, uint N, typename Container>
 Matrix<M, N, Container> operator*(const Matrix<M, N, Container>& m,
-		const Scalar x) {
+	typename const Matrix<M, N, Container>::DataType x) {
 	Matrix<M, N, Container> result;
 
 	for (uint i = 0; i < M; i++)
@@ -426,7 +430,7 @@ Matrix<M, N, Container> operator*(const Matrix<M, N, Container>& m,
  * @return Result of scalar multiplication.
  */
 template<uint M, uint N, typename Container>
-Matrix<M, N, Container> operator*(const Scalar x,
+Matrix<M, N, Container> operator*(typename const Matrix<M, N, Container>::DataType x,
 		const Matrix<M, N, Container>& m) {
 	return m * x;
 }
@@ -443,8 +447,8 @@ Matrix<M, N, Container> operator*(const Scalar x,
  * @return Result of scalar division.
  */
 template<uint M, uint N, typename Container>
-Matrix<M, N, Container> operator/(const Matrix<M, N, Container>& m,
-		const Scalar x) {
+Matrix<M, N, Container> operator/(typename const Matrix<M, N, Container>& m,
+		typename const Matrix<M, N, Container>::DataType x) {
 	return m * (1 / x);
 }
 
