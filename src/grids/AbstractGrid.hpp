@@ -1,7 +1,7 @@
 #ifndef ABSTRACTGRID_HPP_
 #define	ABSTRACTGRID_HPP_
 
-#include "src/snapshot/AbstractSnapshotter.hpp"
+#include "src/snapshot/VTKSnapshotter.hpp"
 #include "src/grids/variables/Variables.hpp"
 
 namespace grids
@@ -15,9 +15,12 @@ namespace grids
 	protected:
 		uint size;
 		Scalar V;
-		AbstractSnapshotter snapshotter;
+		AbstractSnapshotter* snapshotter;
 
+	protected:
+		std::vector<CellType> cells;
 	public:
+
 		AbstractGrid() {};
 		virtual ~AbstractGrid() {};
 

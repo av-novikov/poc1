@@ -21,9 +21,12 @@ namespace units {
 	class AbstractCell
 	{
 	public:
+		typedef PointType Point;
 		typedef TVariable Variable;
 		typedef TDependentVariable DependentVariable;
 	public:
+		// Geometry dimension of cell
+		static const uint dim;
 		// Center of cell
 		PointType coords;
 		// Cell sizes;
@@ -56,6 +59,12 @@ namespace units {
 			V = cell.V;
 		};
 	};
+
+	template<typename PointType,
+	typename TVariable, typename TDependentVariable>
+	const uint AbstractCell<PointType, TVariable, TDependentVariable>::dim = PointType::size;
 };
+
+
 
 #endif /* ABSTRACTCELL_HPP_ */

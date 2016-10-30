@@ -14,9 +14,10 @@ namespace data
 			};
 		};
 
-
+		static const uint size;
 	};
 
+	const uint Point1dContainer::size = 1;
 	typedef Vector<1, Point1dContainer> Point1d;
 };
 

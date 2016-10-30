@@ -1,10 +1,13 @@
 #ifndef RADIALGRID_HPP_
 #define	RADIALGRID_HPP_
 
-#include "src/grids/cells/AbstractCell.hpp"
-#include "src/grids/AbstractGrid.hpp"
+#include <vtkSmartPointer.h>
+#include <vtkPolyData.h>
 
 #include <vector>
+
+#include "src/grids/cells/AbstractCell.hpp"
+#include "src/grids/AbstractGrid.hpp"
 
 /** 
  Implementation of simple radial 1D grid
@@ -22,8 +25,6 @@ namespace grids
 			Scalar hz;
 			uint size;
 		};
-	protected:
-		std::vector<CellType> cells;
 	public:
 
 		void load(const Geometry& geom)
@@ -32,7 +33,6 @@ namespace grids
 		};
 		void snapshot(uint i) const
 		{ };
-
 	};
 };
 
