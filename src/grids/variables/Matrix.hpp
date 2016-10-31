@@ -21,11 +21,11 @@ typedef double Scalar;
  * @tparam N Second matrix dimension.
  * @tparam ElemType Type of elements constitute container
  */
-template<uint M, uint N,
-		typename ElemType>
+template<uint M, uint N>
 class DefaultMatrixContainer {
 public:
-	ElemType values[M * N];
+	typedef Scalar DataType;
+	DataType values[M * N];
 };
 
 /**
@@ -36,11 +36,11 @@ public:
  * @tparam ElemType Type of elements constitute container
  * @tparam Container Container class to hold values.
  */
-template<uint M, uint N, typename ElemType = Scalar,
-typename Container = DefaultMatrixContainer<M, N, ElemType>>
+template<uint M, uint N, typename Container = DefaultMatrixContainer<M, N> >
 class Matrix: public Container {
 public:
 	typedef Container Base;
+	using typename Container::DataType;
 protected:
 	/**
 	 * Returns values array index of matrix component.
@@ -62,7 +62,7 @@ public:
 	 *
 	 * @param m Matrix to construct from.
 	 */
-	Matrix(const Matrix<M, N, ElemType, Container>& m);
+	Matrix(const Matrix<M, N, Container>& m);
 
 	/**
 	 * Assignment operator.
@@ -71,14 +71,14 @@ public:
 	 *
 	 * @return Reference to modified matrix instance.
 	 */
-	Matrix<M, N, ElemType, Container>& operator=(const Matrix<M, N, ElemType, Container>& m);
+	Matrix<M, N, Container>& operator=(const Matrix<M, N, Container>& m);
 
 	/**
 	 * Constructor that initializes matrix with specified values.
 	 *
 	 * @param values Values to initialize matrix with.
 	 */
-	Matrix(std::initializer_list<ElemType> values);
+	Matrix(std::initializer_list<DataType> values);
 
 	/**
 	 * Returns matrix component.
@@ -88,7 +88,7 @@ public:
 	 *
 	 * @return Corresponding matrix component.
 	 */
-	ElemType operator()(const uint i, const uint j) const;
+	DataType operator()(const uint i, const uint j) const;
 
 	/**
 	 * Returns reference to matrix component, used to modify matrix content.
@@ -98,14 +98,14 @@ public:
 	 *
 	 * @return Reference to corresponding matrix component.
 	 */
-	ElemType& operator()(const uint i, const uint j);
+	DataType& operator()(const uint i, const uint j);
 
 	/**
 	 * Transposes matrix.
 	 *
 	 * @return Transposed matrix.
 	 */
-	Matrix<N, M, ElemType, Container> transpose() const;
+	Matrix<N, M, Container> transpose() const;
 
 	/**
 	 * Transposes square matrix (modifies matrix contents).
@@ -113,31 +113,27 @@ public:
 	void transposeInplace();
 };
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<M, N, ElemType, Container>::Matrix() {
-	static_assert(sizeof(this->values) >= sizeof(ElemType)*M*N, "Container must have enough memory to store values");
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>::Matrix() {
+	static_assert(sizeof(this->values) >= sizeof(DataType)*M*N, "Container must have enough memory to store values");
 }
 
-template<uint M, uint N,
-		typename ElemType, typename Container>
-Matrix<M, N, ElemType, Container>::Matrix(std::initializer_list<ElemType> values) :
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>::Matrix(std::initializer_list<DataType> values) :
 		Matrix() {
 	int i = 0;
 	for (auto value : values)
 		this->values[i++] = value;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<M, N, ElemType, Container>::Matrix(const Matrix<M, N, ElemType, Container>& m) {
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>::Matrix(const Matrix<M, N, Container>& m) {
 	(*this) = m;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<M, N, ElemType, Container>& Matrix<M, N, ElemType, Container>::operator=(
-		const Matrix<M, N, ElemType, Container>& m) {
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>& Matrix<M, N, Container>::operator=(
+		const Matrix<M, N, Container>& m) {
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
 			(*this)(i, j) = m(i, j);
@@ -145,31 +141,27 @@ Matrix<M, N, ElemType, Container>& Matrix<M, N, ElemType, Container>::operator=(
 	return *this;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-inline uint Matrix<M, N, ElemType, Container>::getIndex(uint i, uint j) const {
+template<uint M, uint N, typename Container>
+inline uint Matrix<M, N, Container>::getIndex(uint i, uint j) const {
 	assert(i < M);
 	assert(j < N);
 
 	return i * N + j;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-inline ElemType Matrix<M, N, ElemType, Container>::operator()(const uint i,
+template<uint M, uint N, typename Container>
+inline typename Container::DataType Matrix<M, N, Container>::operator()(const uint i,
 		const uint j) const {
 	return this->values[getIndex(i, j)];
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-inline ElemType& Matrix<M, N, ElemType, Container>::operator()(const uint i, const uint j) {
+template<uint M, uint N, typename Container>
+inline typename Container::DataType& Matrix<M, N, Container>::operator()(const uint i, const uint j) {
 	return this->values[getIndex(i, j)];
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<N, M, ElemType, Container> Matrix<M, N, ElemType, Container>::transpose() const {
+template<uint M, uint N, typename Container>
+Matrix<N, M, Container> Matrix<M, N, Container>::transpose() const {
 	Matrix<N, M, Container> result;
 
 	for (uint i = 0; i < M; i++)
@@ -179,9 +171,8 @@ Matrix<N, M, ElemType, Container> Matrix<M, N, ElemType, Container>::transpose()
 	return result;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container>
-void Matrix<M, N, ElemType, Container>::transposeInplace() {
+template<uint M, uint N, typename Container>
+void Matrix<M, N, Container>::transposeInplace() {
 	(*this) = transpose();
 }
 
@@ -195,10 +186,9 @@ void Matrix<M, N, ElemType, Container>::transposeInplace() {
  *
  * @return Negative of matrix
  */
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<M, N, ElemType, Container> operator-(const Matrix<M, N, ElemType, Container>& m) {
-	Matrix<M, N, ElemType, Container> result;
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator-(const Matrix<M, N, Container>& m) {
+	Matrix<M, N, Container> result;
 
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
@@ -220,11 +210,10 @@ Matrix<M, N, ElemType, Container> operator-(const Matrix<M, N, ElemType, Contain
  *
  * @return Matrix summ (m1+m2).
  */
-template<uint M, uint N, typename ElemType,
-		typename Container1, typename Container2, typename Container3>
-Matrix<M, N, Container3> operator+(const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
-	Matrix<M, N, ElemType, Container3> result;
+template<uint M, uint N, typename Container1, typename Container2, typename Container3>
+Matrix<M, N, Container3> operator+(const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
+	Matrix<M, N, Container3> result;
 
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
@@ -246,11 +235,11 @@ Matrix<M, N, Container3> operator+(const Matrix<M, N, ElemType, Container1>& m1,
  *
  * @return Matrix summ (m1+m2).
  */
-template<uint M, uint N, typename ElemType, typename Container1, typename Container2>
-Matrix<M, N, ElemType, DefaultMatrixContainer<M, N, ElemType>> operator+(
-		const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
-	return operator+<M, N, ElemType, Container1, Container2, DefaultMatrixContainer<M, N, ElemType>>(
+template<uint M, uint N, typename Container1, typename Container2>
+Matrix<M, N, DefaultMatrixContainer<M, N>> operator+(
+		const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
+	return operator+<M, N, Container1, Container2, DefaultMatrixContainer<M, N>>(
 			m1, m2);
 }
 
@@ -266,11 +255,10 @@ Matrix<M, N, ElemType, DefaultMatrixContainer<M, N, ElemType>> operator+(
  *
  * @return Matrix summ (m1+m2).
  */
-template<uint M, uint N, typename ElemType,
-		typename Container>
-Matrix<M, N, ElemType, Container> operator+(const Matrix<M, N, ElemType, Container>& m1,
-		const Matrix<M, N, ElemType, Container>& m2) {
-	return operator+<M, N, ElemType, Container, Container, Container>(m1, m2);
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator+(const Matrix<M, N, Container>& m1,
+		const Matrix<M, N, Container>& m2) {
+	return operator+<M, N, Container, Container, Container>(m1, m2);
 }
 
 /**
@@ -286,11 +274,10 @@ Matrix<M, N, ElemType, Container> operator+(const Matrix<M, N, ElemType, Contain
  *
  * @return Matrix difference (m1-m2).
  */
-template<uint M, uint N, typename ElemType,
-		typename Container1, typename Container2, typename Container3>
-Matrix<M, N, ElemType, Container3> operator-(const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
-	Matrix<M, N, ElemType, Container3> result;
+template<uint M, uint N, typename Container1, typename Container2, typename Container3>
+Matrix<M, N, Container3> operator-(const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
+	Matrix<M, N, Container3> result;
 
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
@@ -314,10 +301,10 @@ Matrix<M, N, ElemType, Container3> operator-(const Matrix<M, N, ElemType, Contai
  */
 template<uint M, uint N, typename ElemType,
 		typename Container1, typename Container2>
-Matrix<M, N, ElemType, DefaultMatrixContainer<M, N, ElemType>> operator-(
-		const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
-	return operator-<M, N, ElemType, Container1, Container2, DefaultMatrixContainer<M, N, ElemType>>(
+Matrix<M, N, DefaultMatrixContainer<M, N>> operator-(
+		const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
+	return operator-<M, N, Container1, Container2, DefaultMatrixContainer<M, N>>(
 			m1, m2);
 }
 
@@ -333,10 +320,10 @@ Matrix<M, N, ElemType, DefaultMatrixContainer<M, N, ElemType>> operator-(
  *
  * @return Matrix difference (m1-m2).
  */
-template<uint M, uint N, typename ElemType, typename Container>
-Matrix<M, N, ElemType, Container> operator-(const Matrix<M, N, ElemType, Container>& m1,
-		const Matrix<M, N, ElemType, Container>& m2) {
-	return operator-<M, N, ElemType, Container, Container, Container>(m1, m2);
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator-(const Matrix<M, N, Container>& m1,
+		const Matrix<M, N, Container>& m2) {
+	return operator-<M, N, Container, Container, Container>(m1, m2);
 }
 
 /**
@@ -353,11 +340,11 @@ Matrix<M, N, ElemType, Container> operator-(const Matrix<M, N, ElemType, Contain
  *
  * @return Matrix product (m1*m2).
  */
-template<uint M, uint N, uint K, typename ElemType, typename Container1, typename Container2,
+template<uint M, uint N, uint K, typename Container1, typename Container2,
 		typename Container3>
-Matrix<M, K, ElemType, Container3> operator*(const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<N, K, ElemType, Container2>& m2) {
-	Matrix<M, K, ElemType, Container3> result;
+Matrix<M, K, Container3> operator*(const Matrix<M, N, Container1>& m1,
+		const Matrix<N, K, Container2>& m2) {
+	Matrix<M, K, Container3> result;
 
 	for (uint i = 0; i < M; i++)
 
@@ -384,12 +371,12 @@ Matrix<M, K, ElemType, Container3> operator*(const Matrix<M, N, ElemType, Contai
  *
  * @return Matrix product (m1*m2).
  */
-template<uint M, uint N, uint K, typename ElemType, typename Container1, typename Container2>
-Matrix<M, K, DefaultMatrixContainer<M, K, ElemType>> operator*(
-		const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<N, K, ElemType, Container2>& m2) {
-	return operator*<M, N, K, ElemType, Container1, Container2,
-			DefaultMatrixContainer<M, K, ElemType>>(m1, m2);
+template<uint M, uint N, uint K, typename Container1, typename Container2>
+Matrix<M, K, DefaultMatrixContainer<M, K>> operator*(
+		const Matrix<M, N, Container1>& m1,
+		const Matrix<N, K, Container2>& m2) {
+	return operator*<M, N, K, Container1, Container2,
+			DefaultMatrixContainer<M, K>>(m1, m2);
 }
 
 /**
@@ -403,10 +390,10 @@ Matrix<M, K, DefaultMatrixContainer<M, K, ElemType>> operator*(
  *
  * @return Matrix product (m1*m2).
  */
-template<uint M, typename ElemType, typename Container>
-Matrix<M, M, ElemType, Container> operator*(const Matrix<M, M, ElemType, Container>& m1,
-		const Matrix<M, M, ElemType, Container>& m2) {
-	return operator*<M, M, M, ElemType, Container, Container, Container>(m1, m2);
+template<uint M, typename Container>
+Matrix<M, M, Container> operator*(const Matrix<M, M, Container>& m1,
+		const Matrix<M, M, Container>& m2) {
+	return operator*<M, M, M, Container, Container, Container>(m1, m2);
 }
 
 /**
@@ -420,10 +407,11 @@ Matrix<M, M, ElemType, Container> operator*(const Matrix<M, M, ElemType, Contain
  *
  * @return Result of scalar multiplication.
  */
-template<uint M, uint N, typename ElemType, typename Container>
-Matrix<M, N, ElemType, Container> operator*(const Matrix<M, N, ElemType, Container>& m,
-		const ElemType x) {
-	Matrix<M, N, ElemType, Container> result;
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator*(const Matrix<M, N, Container>& m,
+		const typename Matrix<M, N, Container>::DataType x)
+{
+	Matrix<M, N, Container> result;
 
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
@@ -443,9 +431,9 @@ Matrix<M, N, ElemType, Container> operator*(const Matrix<M, N, ElemType, Contain
  *
  * @return Result of scalar multiplication.
  */
-template<uint M, uint N, typename ElemType, typename Container>
-Matrix<M, N, ElemType, Container> operator*(const ElemType x,
-		const Matrix<M, N, ElemType, Container>& m) {
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator*(const typename Matrix<M, N, Container>::DataType x,
+		const Matrix<M, N, Container>& m) {
 	return m * x;
 }
 
@@ -460,15 +448,15 @@ Matrix<M, N, ElemType, Container> operator*(const ElemType x,
  *
  * @return Result of scalar division.
  */
-template<uint M, uint N, typename ElemType, typename Container>
-Matrix<M, N, ElemType, Container> operator/(const Matrix<M, N, ElemType, Container>& m,
-		const ElemType x) {
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> operator/(const Matrix<M, N, Container>& m,
+		const typename Matrix<M, N, Container>::DataType x) {
 	return m * (1 / x);
 }
 
-template<uint M, uint N, typename ElemType, typename Container1, typename Container2>
-bool operator==(const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
+template<uint M, uint N, typename Container1, typename Container2>
+bool operator==(const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
 			// FIXME Should this constant be replaced by something context-specific?
@@ -478,17 +466,16 @@ bool operator==(const Matrix<M, N, ElemType, Container1>& m1,
 	return true;
 }
 
-template<uint M, uint N, typename ElemType,
-		typename Container1, typename Container2>
-bool operator!=(const Matrix<M, N, ElemType, Container1>& m1,
-		const Matrix<M, N, ElemType, Container2>& m2) {
+template<uint M, uint N, typename Container1, typename Container2>
+bool operator!=(const Matrix<M, N, Container1>& m1,
+		const Matrix<M, N, Container2>& m2) {
 	return !(m1 == m2);
 }
 
 /**
  * Definition of Vector class
  */
-template<uint M, typename ElemType = Scalar, typename Container = DefaultMatrixContainer<M, 1, ElemType> > using Vector = Matrix<M, 1, ElemType, Container>;
+template<uint M, typename Container = DefaultMatrixContainer<M, 1> > using Vector = Matrix<M, 1, Container>;
 }
 ;
 
@@ -497,9 +484,9 @@ using data::uint;
 using data::Scalar;
 using data::Matrix;
 
-template<uint M, uint N, typename ElemType, typename Container>
+template<uint M, uint N, typename Container>
 inline std::ostream& operator<<(std::ostream &os,
-		const Matrix<M, N, ElemType, Container>& mat) {
+		const Matrix<M, N, Container>& mat) {
 	for (uint i = 0; i < M; i++) {
 		for (uint j = 0; j < N; j++)
 			os << mat(i, j) << "\t";

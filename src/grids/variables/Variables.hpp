@@ -9,10 +9,12 @@
 namespace data {
 
 struct Var1phaseContainer {
+	typedef Scalar DataType;
+
 	union {
-		Scalar values[1];
+		DataType values[1];
 		struct {
-			Pressure::ValueType p;
+			DataType p;
 		};
 	};
 
@@ -26,11 +28,13 @@ const uint Var1phaseContainer::size = 1;
 typedef Vector<1, Var1phaseContainer> Var1phase;
 
 struct Var1phaseNITContainer {
+	typedef Scalar DataType;
+
 	union {
-		Scalar values[2];
+		DataType values[2];
 		struct {
-			Temperature::ValueType t;
-			Pressure::ValueType p;
+			DataType t;
+			DataType p;
 		};
 	};
 
