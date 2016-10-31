@@ -18,7 +18,7 @@ namespace grids
 		void increment(const uint axis)
 		{
 			this->values[axis] = (this->values[axis] + 1 - left.values[axis]) %
-				(right.values[axis] - left.values[axis] + 1) + left.values[axis];
+				(right.values[axis] - left.values[axis]) + left.values[axis];
 			if (this->values[axis] == left.values[axis])
 				if(axis > 0)
 					increment(axis-1);
@@ -36,12 +36,22 @@ namespace grids
 
 		BasicIterator(const BasicIterator& it) = default;
 		BasicIterator(Cell* _ptr, Indexes _left, Indexes _right, Indexes _sizes):
-						ptr(_ptr), left(_left), right(_right), sizes(_sizes) {};
+						ptr(_ptr), left(_left), right(_right), sizes(_sizes) 
+		{
+			if (ptr != nullptr)
+			{
+				switch (Cell::dim)
+				{
+				case 1:
+					this->values[0] = ptr->num;
+				}
+			}
+		};
 		~BasicIterator() {};
 
 		BasicIterator& operator++()
 		{
-			increment(2);
+			increment(Cell::dim - 1);
 
 			if(ptr != nullptr)
 				ptr += (getIdx() - ptr->num);
@@ -78,9 +88,18 @@ namespace grids
 
 		int getIdx() const
 		{
-			return 	this->values[0] * sizes.values[1] * sizes.values[2] +
-					this->values[1] * 					sizes.values[2] +
-					this->values[2];
+			switch (Cell::dim)
+			{
+			case 1:
+				return	this->values[0];
+			case 2:
+				return	this->values[0] * sizes.values[1] +
+						this->values[1];
+			case 3:
+				return 	this->values[0] * sizes.values[1] * sizes.values[2] +
+						this->values[1] * sizes.values[2] +
+						this->values[2];
+			}
 		};
 
 		Cell* getPtr() const

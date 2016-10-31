@@ -19,9 +19,12 @@ namespace grids
 		typedef AbstractGrid<units::RadialCell<TVariable, TDependentVariable> > Base;
 		typedef BasicIterator<RadialGrid> Iterator;
 		using typename Base::Cell;
+		typedef typename Cell::Indexes Indexes;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
-		using typename Base::Indexes;
+
+		Indexes left;
+		Indexes right;
 
 		struct Geometry
 		{
@@ -36,23 +39,22 @@ namespace grids
 
 	protected:
 		using Base::totalSize;
-		using Base::sizes;
-		using Base::sizes_ghost;
 		using Base::Volume;
 
 	// All cells
-	public:
+	protected:
 		std::vector<Cell> cells;
 
 	// All iterators
 	public:
-		inline Iterator getIterator()
+		inline Iterator getInnerIter()
 		{
-			return Iterator(&cells[0], {geom.size_ghost, 0, 0},
-										{totalSize - geom.size_ghost, 0, 0},
-											sizes);
+			return Iterator(&cells[geom.size_ghost], left, right, { geom.size });
 		};
-		//static Iterator getIterator_ghost();
+		inline Iterator getIter()
+		{
+			return Iterator(&cells[0], { 0 }, { totalSize }, { totalSize });
+		};
 
 	public:
 		RadialGrid() : Base() {};
@@ -66,8 +68,8 @@ namespace grids
 		{
 			geom = _geom;
 			totalSize = geom.size + 2 * geom.size_ghost;
-			sizes = { geom.size, 1, 1 };
-			sizes_ghost = { totalSize, 1, 1 };
+			left = { geom.size_ghost };
+			right = { totalSize - geom.size_ghost };
 
 			cells.reserve(totalSize);
 			Volume = 0.0;
@@ -75,7 +77,7 @@ namespace grids
 			
 			double r_prev = geom.r_w;
 			double logMax = log(geom.r_e / geom.r_w);
-			double logStep = logMax / (double)(sizes.r);
+			double logStep = logMax / (double)(geom.size);
 			double hr = r_prev * (exp(logStep) - 1.0);
 			double cm = geom.r_w - ((double)(geom.size_ghost) - 0.5) * hr;
 
@@ -88,7 +90,7 @@ namespace grids
 			{
 				cm = r_prev * (1.0 + exp(logStep)) / 2.0;
 				hr = r_prev * (exp(logStep) - 1.0);
-				cells.push_back(Cell(counter++, cm, hr, geom.hz));
+				cells.push_back( Cell(counter++, cm, hr, geom.hz) );
 
 				Volume += cells[cells.size() - 1].V;
 				r_prev = r_prev * exp(logStep);

@@ -5,9 +5,12 @@
 
 namespace data
 {
-	struct Point1dContainer
+	// Sizes
+	/*-------------------------------------------------------------------*/
+
+	struct Size1dContainer
 	{
-		typedef Scalar DataType;
+		typedef uint DataType;
 
 		union {
 			DataType values[1];
@@ -15,11 +18,12 @@ namespace data
 				DataType r;
 			};
 		};
+
 		static const uint size;
 	};
 
-	const uint Point1dContainer::size = 1;
-	typedef Vector<1, Point1dContainer> Point1d;
+	const uint Size1dContainer::size = 1;
+	typedef Vector<1, Size1dContainer> Size1d;
 
 	struct SizeContainer
 	{
@@ -58,6 +62,27 @@ namespace data
 
 	const uint CylindricalSizeContainer::size = 3;
 	typedef Vector<3, CylindricalSizeContainer> CylindricalSize;
+
+	// Points
+	/*-------------------------------------------------------------------*/
+
+	struct Point1dContainer
+	{
+		typedef Scalar DataType;
+		typedef Size1d IndexesType;
+
+		union {
+			DataType values[1];
+			struct {
+				DataType r;
+			};
+		};
+		static const uint size;
+	};
+
+	const uint Point1dContainer::size = 1;
+	typedef Vector<1, Point1dContainer> Point1d;
+
 };
 
 #endif /* COORDINATES_HPP_ */

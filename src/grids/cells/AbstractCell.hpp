@@ -22,6 +22,7 @@ namespace units {
 	{
 	public:
 		typedef PointType Point;
+		typedef typename PointType::Base::IndexesType Indexes;
 		typedef TVariable Variable;
 		typedef TDependentVariable DependentVariable;
 	public:
@@ -44,20 +45,10 @@ namespace units {
 
 		AbstractCell() : num(-1), V(0.0) {};
 		AbstractCell(int _num) : num(_num) {};
-		AbstractCell(const AbstractCell& cell)
-		{
-			u_next = cell.u_next;	u_iter = cell.u_iter;	u_prev = cell.u_prev;
-			d_next = cell.d_next;	d_iter = cell.d_iter;	d_prev = cell.d_prev;
-			V = cell.V;
-		};
+		AbstractCell(const AbstractCell& cell) = default;
 		~AbstractCell() {};
 
-		AbstractCell& operator=(const AbstractCell& cell)
-		{
-			u_next = cell.u_next;	u_iter = cell.u_iter;	u_prev = cell.u_prev;
-			d_next = cell.d_next;	d_iter = cell.d_iter;	d_prev = cell.d_prev;
-			V = cell.V;
-		};
+		AbstractCell& operator=(const AbstractCell& cell) = default;
 	};
 
 	template<typename PointType,

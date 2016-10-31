@@ -15,7 +15,7 @@ int main()
 {
 	typedef units::RadialCell<data::Var1phase> Cell;
 	typedef Cell::Variable Variable;
-	//typedef Grid<Variable>::Iterator Iterator;
+	typedef Grid<Variable>::Iterator Iterator;
 	//typedef models::AbstractModel<Cell, Grid> Model;
 
 	Grid<Variable> grid;
@@ -24,15 +24,14 @@ int main()
 	geom.r_e = 100.0;
 	geom.hz = 10.0;
 	geom.size = 20;
-	geom.size_ghost = 0;
+	geom.size_ghost = 2;
 
 	grid.load(geom);
-	//Iterator it1 = grid.getIterator();
-	//for(Iterator it = it1; it != nullptr; ++it)
-	//for(vector<Cell>::iterator it = grid.cells.begin(); it != grid.cells.end(); ++it)
-	for(int i = 0; i < 20; i++)
+	for(Iterator it = grid.getIter(); it != nullptr; ++it)
 	{
-		cout << grid.cells[i].num << endl;
+		cout << "#" << it->num << endl;
+		cout << "coords:\t" << it->coords;
+		cout << "sizes:\t" << it->sizes;
 	}
 
 	while (true)

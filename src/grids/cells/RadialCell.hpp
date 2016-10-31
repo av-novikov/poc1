@@ -16,6 +16,7 @@ namespace units
 	public:
 		typedef AbstractCell<Point1d, TVariable, TDependentVariable> Base;
 		using typename Base::Point;
+		using typename Base::Indexes;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
 
@@ -26,23 +27,18 @@ namespace units
 	public:
 		RadialCell() {};
 
-		RadialCell(int _num, Scalar _r, Scalar _hr, Scalar _hz) : Base(_num)
+		RadialCell(int _num, Scalar _r, Scalar _hr, Scalar _hz)
 		{
+			num = _num;
 			coords.r = _r;
 			sizes.r = _hr;
 			V = 2.0 * M_PI * coords.r * sizes.r * _hz;
 		};
 
-		RadialCell(const RadialCell& cell) : Base(cell)
-		{
-		};
-
+		RadialCell(const RadialCell& cell) = default;
 		~RadialCell() {};
 
-		RadialCell& operator=(const RadialCell& cell)
-		{
-			Base::operator=(cell);
-		};
+		RadialCell& operator=(const RadialCell& cell) = default;
 	};
 };
 
