@@ -26,7 +26,12 @@ class DefaultMatrixContainer {
 public:
 	typedef Scalar DataType;
 	DataType values[M * N];
+
+	static const uint size;
 };
+
+template<uint M, uint N>
+const uint DefaultMatrixContainer<M, N>::size = M * N;
 
 /**
  * Genereic matrix class.

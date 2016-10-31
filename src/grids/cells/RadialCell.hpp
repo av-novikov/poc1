@@ -1,6 +1,8 @@
 #ifndef RADIALCELL_HPP_
 #define RADIALCELL_HPP_
 
+#include <iostream>
+
 #include "src/grids/cells/AbstractCell.hpp"
 #include "src/grids/variables/Coordinates.hpp"
 
@@ -8,19 +10,27 @@ namespace units
 {
 	using data::Point1d;
 
-	template<typename Variable, typename DependentVariable = data::EmptyContainer>
-	class RadialCell : public AbstractCell<Point1d, Variable, DependentVariable>
+	template<typename TVariable, typename TDependentVariable = data::EmptyContainer>
+	class RadialCell : public AbstractCell<Point1d, TVariable, TDependentVariable>
 	{
 	public:
-		typedef AbstractCell<Point1d, Variable, DependentVariable> Base;
+		typedef AbstractCell<Point1d, TVariable, TDependentVariable> Base;
+		using typename Base::Point;
+		using typename Base::Variable;
+		using typename Base::DependentVariable;
+
+		using Base::num;
+		using Base::coords;
+		using Base::sizes;
+		using Base::V;
 	public:
 		RadialCell() {};
 
 		RadialCell(int _num, Scalar _r, Scalar _hr, Scalar _hz) : Base(_num)
 		{
-			this->coords.r = _r;
-			this->sizes.r = _hr;
-			this->V = 2.0 * M_PI * this->coords.r * this->sizes.r * _hz;
+			coords.r = _r;
+			sizes.r = _hr;
+			V = 2.0 * M_PI * coords.r * sizes.r * _hz;
 		};
 
 		RadialCell(const RadialCell& cell) : Base(cell)

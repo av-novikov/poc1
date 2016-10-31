@@ -16,17 +16,16 @@ namespace grids
 		typedef CellType Cell;
 		typedef typename Cell::Variable Variable;
 		typedef typename Cell::DependentVariable DependentVariable;
+		typedef data::CylindricalSize Indexes;
 	protected:
 
 		uint totalSize;
-		data::CylindricalSize sizes;
-		data::CylindricalSize sizes_ghost;
+		Indexes sizes;
+		Indexes sizes_ghost;
 		
 		Scalar Volume;
 		AbstractSnapshotter* snapshotter;
 
-	protected:
-		std::vector<Cell> cells;
 	public:
 
 		AbstractGrid() 

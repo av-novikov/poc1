@@ -6,32 +6,54 @@
 namespace grids
 {
 
-	template <class cellType>
-	struct Iterator : public data::Vector<cellType::dim, cellType::Point::Base>
+	template <class gridType>
+	struct BasicIterator : public gridType::Indexes
 	{
 	public:
-		typedef data::Vector<cellType::dim, cellType::Point::Base> VectorInt;
+		typedef typename gridType::Cell Cell;
+		typedef typename gridType::Indexes Indexes;
 	private:
-		cellType* ptr;
+		Cell* ptr;
+
+		void increment(const uint axis)
+		{
+			this->values[axis] = (this->values[axis] + 1 - left.values[axis]) %
+				(right.values[axis] - left.values[axis] + 1) + left.values[axis];
+			if (this->values[axis] == left.values[axis])
+				if(axis > 0)
+					increment(axis-1);
+				else
+					ptr = nullptr;
+		};
+
 	protected:
-		VectorInt left, right, sizes;
+		Indexes left, right, sizes;
 	public:
-		Iterator()
+		BasicIterator()
 		{
 			ptr = nullptr;
 		};
 
-		Iterator(const Iterator& it) = default;
-		Iterator(cellType* _ptr, VectorInt _left, VectorInt _right, VectorInt _sizes);
-		~Iterator() {};
+		BasicIterator(const BasicIterator& it) = default;
+		BasicIterator(Cell* _ptr, Indexes _left, Indexes _right, Indexes _sizes):
+						ptr(_ptr), left(_left), right(_right), sizes(_sizes) {};
+		~BasicIterator() {};
 
-		Iterator& operator++();
+		BasicIterator& operator++()
+		{
+			increment(2);
 
-		Iterator& operator=(const Iterator& rhs)
+			if(ptr != nullptr)
+				ptr += (getIdx() - ptr->num);
+
+			return (*this);
+		}
+
+		BasicIterator& operator=(const BasicIterator& rhs)
 		{
 			ptr = rhs.ptr;
 
-			VectorInt::operator=(rhs);
+			Indexes::operator=(rhs);
 			left = rhs.left;
 			right = rhs.right;
 			sizes = rhs.sizes;
@@ -39,48 +61,52 @@ namespace grids
 			return (*this);
 		};
 
-		bool operator==(const Iterator& rhs)
+		bool operator==(const BasicIterator& rhs)
 		{
 			return ptr == rhs.ptr;
 		};
 
-		bool operator!=(const Iterator& rhs)
+		bool operator!=(const BasicIterator& rhs)
 		{
 			return ptr != rhs.ptr;
 		};
 
-		cellType* operator->() const
+		Cell* operator->() const
 		{
 			return ptr;
 		};
 
-		int getIdx() const;
+		int getIdx() const
+		{
+			return 	this->values[0] * sizes.values[1] * sizes.values[2] +
+					this->values[1] * 					sizes.values[2] +
+					this->values[2];
+		};
+
+		Cell* getPtr() const
+		{
+			return ptr;
+		};
 	};
 
-	template <class cellType>
-	Iterator<cellType>::Iterator(cellType* _ptr, VectorInt _left, VectorInt _right, VectorInt _sizes) :
-				ptr(_ptr), left(_left), right(_right), sizes(_sizes)
+	template <class gridType>
+	inline bool operator!=(const BasicIterator<gridType>& it, const std::nullptr_t null)
 	{
-	};
+		return it.getPtr() != null;
+	}
 
-	template <class cellType>
-	inline Iterator& Iterator<cellType>::operator++()
+	template <class gridType>
+	inline bool operator==(const BasicIterator<gridType>& it, const std::nullptr_t null)
 	{
-	};
+		return it.getPtr() == null;
+	}
 
-	template <class cellType>
-	inline int Iterator<cellType>::getIdx() const
+	template <class gridType>
+	inline std::ostream& operator<<(std::ostream& os, const BasicIterator<gridType>& it)
 	{
-
-	};
-
-	template <class cellType>
-	inline std::ostream& operator<<(std::ostream& os, const Iterator<cellType>& it)
-	{
-		os << it << std::endl;
+		os << it->num << std::endl;
 		return os;
 	};
-
 };
 
 #endif /* ITERATOR_HPP_ */

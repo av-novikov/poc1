@@ -65,6 +65,18 @@ namespace units {
 	const uint AbstractCell<PointType, TVariable, TDependentVariable>::dim = PointType::size;
 };
 
+namespace std
+{
+	template<typename PointType,
+	typename TVariable, typename TDependentVariable = data::EmptyContainer>
+	inline std::ostream& operator<<(std::ostream& os, const units::AbstractCell<PointType, TVariable, TDependentVariable>& cell)
+	{
+		os << "#" << cell.num << std::endl;
+		os << "Coords:\t" << cell.coords;
+		os << "Sizes:\t" << cell.sizes;
+		return os;
+	};
+};
 
 
 #endif /* ABSTRACTCELL_HPP_ */

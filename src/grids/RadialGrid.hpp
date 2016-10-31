@@ -3,6 +3,7 @@
 
 #include "src/grids/cells/RadialCell.hpp"
 #include "src/grids/AbstractGrid.hpp"
+#include "src/grids/Iterator.hpp"
 
 #include <vector>
 
@@ -16,9 +17,11 @@ namespace grids
 	{
 	public:
 		typedef AbstractGrid<units::RadialCell<TVariable, TDependentVariable> > Base;
+		typedef BasicIterator<RadialGrid> Iterator;
 		using typename Base::Cell;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
+		using typename Base::Indexes;
 
 		struct Geometry
 		{
@@ -35,8 +38,21 @@ namespace grids
 		using Base::totalSize;
 		using Base::sizes;
 		using Base::sizes_ghost;
-		using Base::cells;
 		using Base::Volume;
+
+	// All cells
+	public:
+		std::vector<Cell> cells;
+
+	// All iterators
+	public:
+		inline Iterator getIterator()
+		{
+			return Iterator(&cells[0], {geom.size_ghost, 0, 0},
+										{totalSize - geom.size_ghost, 0, 0},
+											sizes);
+		};
+		//static Iterator getIterator_ghost();
 
 	public:
 		RadialGrid() : Base() {};
@@ -82,7 +98,6 @@ namespace grids
 				cm += hr;
 				cells.push_back(Cell(counter++, cm, hr, geom.hz));
 			}
-
 		};
 		void snapshot(const uint i) const
 		{};

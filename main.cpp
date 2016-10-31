@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "src/models/AbstractModel.hpp"
 #include "src/grids/RadialGrid.hpp"
@@ -14,10 +15,9 @@ int main()
 {
 	typedef units::RadialCell<data::Var1phase> Cell;
 	typedef Cell::Variable Variable;
+	//typedef Grid<Variable>::Iterator Iterator;
 	//typedef models::AbstractModel<Cell, Grid> Model;
 
-
-	Cell a;
 	Grid<Variable> grid;
 	Grid<Variable>::Geometry geom;
 	geom.r_w = 0.1;
@@ -26,10 +26,14 @@ int main()
 	geom.size = 20;
 	geom.size_ghost = 0;
 
-
 	grid.load(geom);
-	//Model model;
-
+	//Iterator it1 = grid.getIterator();
+	//for(Iterator it = it1; it != nullptr; ++it)
+	//for(vector<Cell>::iterator it = grid.cells.begin(); it != grid.cells.end(); ++it)
+	for(int i = 0; i < 20; i++)
+	{
+		cout << grid.cells[i].num << endl;
+	}
 
 	while (true)
 	{
