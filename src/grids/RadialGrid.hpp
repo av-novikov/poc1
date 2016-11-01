@@ -5,6 +5,10 @@
 #include "src/grids/AbstractGrid.hpp"
 #include "src/grids/Iterator.hpp"
 
+#include <vtkXMLPolyDataWriter.h>
+#include <vtkSmartPointer.h>
+#include <vtkPolyData.h>
+
 #include <vector>
 
 /** 
@@ -22,6 +26,8 @@ namespace grids
 		typedef typename Cell::Indexes Indexes;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
+		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
+		typedef vtkSmartPointer<vtkXMLPolyDataWriter> WtkWriterPtr;
 
 		Indexes left;
 		Indexes right;
@@ -40,6 +46,7 @@ namespace grids
 	protected:
 		using Base::totalSize;
 		using Base::Volume;
+		using Base::snapshotter;
 
 	// All cells
 	protected:
@@ -50,6 +57,10 @@ namespace grids
 		inline Iterator getInnerIter()
 		{
 			return Iterator(&cells[geom.size_ghost], left, right, { geom.size });
+		};
+		inline Iterator getPointIter()
+		{
+			return Iterator(&cells[geom.size_ghost], left, { right.r + 1 }, { geom.size + 1 });
 		};
 		inline Iterator getIter()
 		{
@@ -101,6 +112,7 @@ namespace grids
 				cells.push_back(Cell(counter++, cm, hr, geom.hz));
 			}
 		};
+
 		void snapshot(const uint i) const
 		{};
 

@@ -1,7 +1,7 @@
 #ifndef ABSTRACTGRID_HPP_
 #define	ABSTRACTGRID_HPP_
 
-#include "src/snapshot/VTKSnapshotter.hpp"
+#include "src/snapshot/AbstractSnapshotter.hpp"
 #include "src/grids/variables/Variables.hpp"
 
 namespace grids
@@ -16,11 +16,11 @@ namespace grids
 		typedef CellType Cell;
 		typedef typename Cell::Variable Variable;
 		typedef typename Cell::DependentVariable DependentVariable;
-	protected:
 
 		uint totalSize;
-		
 		Scalar Volume;
+
+	protected:
 		AbstractSnapshotter* snapshotter;
 
 	public:

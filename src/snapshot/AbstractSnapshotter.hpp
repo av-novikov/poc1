@@ -4,15 +4,11 @@
 #include <cstring>
 #include <vector>
 
-#include "src/grids/variables/Matrix.hpp"
-
 class AbstractSnapshotter
 {
 protected:
 	bool isGhostIncluded;
 
-	//virtual void writeGeometry(VtkPtr mesh) = 0;
-	//virtual void writeVariables(VtkPtr mesh) = 0;
 protected:
 	static const std::string PREFIX;
 	static const std::string DOT;
@@ -35,17 +31,7 @@ protected:
 	};
 public:
 
-	/*void setGrid(GridType* _grid)
-	{
-		grid = _grid;
-	};*/
-	virtual void dump(const data::uint i) const
-	{
-		//auto name = getFileName(i);
-		//auto mesh = GridType::getVtkGridType();
-		//writeGeometry(mesh);
-		//writeVariables(mesh);
-	};
+	virtual void dump(const data::uint i) const = 0;
 };
 
 const std::string AbstractSnapshotter::PREFIX = "snaps";
