@@ -29,7 +29,9 @@ public:
 	typedef typename Grid::VtkGridPtr VtkGridPtr;
 	typedef typename Grid::VtkWriterPtr VtkWriterPtr;
 protected:
+	using Base::isGhostIncluded;
 	using Base::grid;
+	using Base::EXT;
 private:
 
 	// Except RadialGrid
@@ -99,7 +101,7 @@ public:
 	{
 		assert(grid != nullptr);
 
-		std::string fileName = getFileName(i);
+		std::string fileName = this->getFileName(i);
 		auto vtk_grid = VtkGridPtr::New();
 		writePoints<Variable, DependentVariable>(vtk_grid);
 		writeCells<Variable, DependentVariable>(vtk_grid);

@@ -1,5 +1,5 @@
 CPP = g++
-CFLAGS = --std=c++11 -O2 -Wall
+CFLAGS = --std=c++14 -O2 -Wall
 LIBFLAGS = -lm -lvtkCommonCore-7.0 -lvtkFiltersCore-7.0 -lvtkIOCore-7.0 -lvtkIOXML-7.0 -lvtkCommonDataModel-7.0 -L/usr/lib/x86_64-linux-gnu
 INCLUDEFLAGS = -I. -I/usr/local/include/vtk-7.0
 
