@@ -1,14 +1,64 @@
 #ifndef ABSTRACTMODEL_HPP_
 #define ABSTRACTMODEL_HPP_
 
+#include <new>
+#include <string>
+#include <cassert>
+
+//#include "src/grids/variables/Variables.hpp"
+#include "src/snapshot/VTKSnapshotter.hpp"
+
 namespace models
 {
-	template<class CellType, template<class CellType> class GridType>
-	class AbstractModel : public GridType<CellType> 
+	typedef data::uint uint;
+	typedef data::Scalar Scalar;
+
+	template<class gridType>
+	class AbstractModel
 	{
 	public:
+		typedef gridType Grid;
+		typedef typename Grid::Variable Variable;
+		typedef	typename Grid::DependentVariable DependentVariable;
+		typedef typename Grid::Cell Cell;
+
+		std::string id;
+	protected:
+		Grid* grid;
+		AbstractSnapshotter<Grid>* snapshotter;
 
 	public:
+		AbstractModel()
+		{
+			id = "abstract";
+			grid = nullptr;
+			snapshotter = nullptr;
+		};
+
+		inline void setSnapshotter(const bool isVTK)
+		{
+			if(isVTK)
+				snapshotter = new VTKSnapshotter<Grid>;
+
+			snapshotter->setGrid(grid);
+		};
+
+		inline void loadGrid(const typename Grid::Geometry& geom)
+		{
+			grid = new Grid;
+			grid->load(geom);
+
+			if(snapshotter != nullptr)
+				snapshotter->setGrid(grid);
+		};
+		inline void snapshot(uint i)
+		{
+			assert(snapshotter != nullptr);
+			assert(grid != nullptr);
+
+			snapshotter->dump(i);
+		};
+
 	};
 };
 

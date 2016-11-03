@@ -27,26 +27,23 @@ namespace grids
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
 		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
-		typedef vtkSmartPointer<vtkXMLPolyDataWriter> WtkWriterPtr;
-
-		Indexes left;
-		Indexes right;
-
-		struct Geometry
+		typedef vtkSmartPointer<vtkXMLPolyDataWriter> VtkWriterPtr;
+		typedef struct 
 		{
 			Scalar r_w;
 			Scalar r_e;
 			Scalar hz;
 			uint size;
 			uint size_ghost;
-		};
-
+		} Geometry;
 		Geometry geom;
+
+		Indexes left;
+		Indexes right;
 
 	protected:
 		using Base::totalSize;
 		using Base::Volume;
-		using Base::snapshotter;
 
 	// All cells
 	protected:
@@ -112,10 +109,6 @@ namespace grids
 				cells.push_back(Cell(counter++, cm, hr, geom.hz));
 			}
 		};
-
-		void snapshot(const uint i) const
-		{};
-
 	};
 };
 

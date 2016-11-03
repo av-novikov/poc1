@@ -121,12 +121,15 @@ public:
 template<uint M, uint N, typename Container>
 Matrix<M, N, Container>::Matrix() {
 	static_assert(sizeof(this->values) >= sizeof(DataType)*M*N, "Container must have enough memory to store values");
+
+	for (uint i = 0; i < M * N; i++)
+		this->values[i] = (DataType)(0);
 }
 
 template<uint M, uint N, typename Container>
 Matrix<M, N, Container>::Matrix(std::initializer_list<DataType> values) :
 		Matrix() {
-	int i = 0;
+	uint i = 0;
 	for (auto value : values)
 		this->values[i++] = value;
 }

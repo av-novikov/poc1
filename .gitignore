@@ -307,3 +307,9 @@ $RECYCLE.BIN/
 *.vcxproj
 *.filters
 *.o
+
+# VTK snapshots
+*.vts
+*.vtp
+*.vtu
+snaps/

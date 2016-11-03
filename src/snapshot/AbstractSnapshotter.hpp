@@ -2,13 +2,20 @@
 #define ABSTRACTSNAPSHOTTER_HPP_
 
 #include <cstring>
+#include <cassert>
 #include <vector>
 
+template <class gridType>
 class AbstractSnapshotter
 {
+public:
+	typedef gridType Grid;
+	typedef unsigned int uint;
+	typedef double Scalar;
+
 protected:
 	bool isGhostIncluded;
-
+	Grid* grid;
 protected:
 	static const std::string PREFIX;
 	static const std::string DOT;
@@ -20,25 +27,38 @@ protected:
 
 	std::string EXT;
 
-	std::string getFileName(const data::uint i) const
+	std::string getFileName(const uint i) const
 	{
 		return 	PREFIX +
 				SLASH +
 				MESH +
 				UNDERSCORE +
 				std::to_string(i) +
+				DOT + 
 				EXT;
 	};
 public:
 
-	virtual void dump(const data::uint i) const = 0;
+	void setGrid(const Grid* _grid)
+	{
+		assert(_grid != nullptr);
+		grid = const_cast<Grid*>(_grid);
+	};
+
+	virtual void dump(const uint i) const = 0;
 };
 
-const std::string AbstractSnapshotter::PREFIX = "snaps";
-const std::string AbstractSnapshotter::DOT = ".";
-const std::string AbstractSnapshotter::UNDERSCORE = "_";
-const std::string AbstractSnapshotter::SLASH = "/";
-const std::string AbstractSnapshotter::MESH = "mesh";
-const std::string AbstractSnapshotter::CORE = "core";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::PREFIX = "snaps";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::DOT = ".";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::UNDERSCORE = "_";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::SLASH = "/";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::MESH = "mesh";
+template <class gridType>
+const std::string AbstractSnapshotter<gridType>::CORE = "core";
 
 #endif /* ABSTRACTSNAPSHOTTER_HPP_ */

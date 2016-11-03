@@ -1,7 +1,6 @@
 #ifndef ABSTRACTGRID_HPP_
 #define	ABSTRACTGRID_HPP_
 
-#include "src/snapshot/AbstractSnapshotter.hpp"
 #include "src/grids/variables/Variables.hpp"
 
 namespace grids
@@ -20,9 +19,6 @@ namespace grids
 		uint totalSize;
 		Scalar Volume;
 
-	protected:
-		AbstractSnapshotter* snapshotter;
-
 	public:
 		AbstractGrid() 
 		{
@@ -31,8 +27,6 @@ namespace grids
 		};
 
 		virtual ~AbstractGrid() {};
-
-		virtual void snapshot(const uint i) const = 0;
 	};
 };
 
