@@ -49,9 +49,12 @@ typedef Vector<2, Var1phaseNITContainer> Var1phaseNIT;
 
 struct EmptyContainer
 {
+	static const uint size;
+	typedef Scalar DataType;
 };
 
-};
+const uint EmptyContainer::size = 0;
 
+};
 
 #endif /* VARIABLES_HPP_ */

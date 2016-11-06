@@ -9,8 +9,6 @@
 #include <vtkSmartPointer.h>
 #include <vtkPolyData.h>
 
-#include <vector>
-
 /** 
  Implementation of simple radial 1D grid
  */
@@ -23,9 +21,10 @@ namespace grids
 		typedef AbstractGrid<units::RadialCell<TVariable, TDependentVariable> > Base;
 		typedef BasicIterator<RadialGrid> Iterator;
 		using typename Base::Cell;
-		typedef typename Cell::Indexes Indexes;
+		using typename Base::Point;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
+		using typename Base::Indexes;
 		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
 		typedef vtkSmartPointer<vtkXMLPolyDataWriter> VtkWriterPtr;
 		typedef struct 
@@ -44,10 +43,7 @@ namespace grids
 	protected:
 		using Base::totalSize;
 		using Base::Volume;
-
-	// All cells
-	protected:
-		std::vector<Cell> cells;
+		using Base::cells;
 
 	// All iterators
 	public:

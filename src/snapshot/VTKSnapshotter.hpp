@@ -43,7 +43,7 @@ private:
 						TDependentVariable>>::value>::type* = 0) const {};
 
 	// RadialGrid
-	template <typename TVariable, typename TDependentVariable>
+	template <typename TVariable, typename TDependentVariable = data::EmptyContainer>
 	inline void writePoints(VtkGridPtr vtk_grid, typename std::enable_if<std::is_same<gridType, grids::RadialGrid<TVariable, TDependentVariable>>::value, gridType>::type* = 0) const
 	{
 		auto points = vtkSmartPointer<vtkPoints>::New();
@@ -55,7 +55,7 @@ private:
 
 		vtk_grid->SetPoints(points);
 	};
-	template <typename TVariable, typename TDependentVariable>
+	template <typename TVariable, typename TDependentVariable = data::EmptyContainer>
 	inline void writeCells(VtkGridPtr vtk_grid, typename std::enable_if<std::is_same<gridType, grids::RadialGrid<TVariable, TDependentVariable>>::value, gridType>::type* = 0) const
 	{
 		auto polygons = vtkSmartPointer<vtkCellArray>::New();
