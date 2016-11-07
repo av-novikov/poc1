@@ -32,6 +32,9 @@ namespace units {
 		PointType coords;
 		// Cell sizes;
 		PointType sizes;
+		// Cell faces
+		PointType faces_up;
+		PointType faces_down;
 
 		// Number of cell in grid
 		int num;

@@ -32,6 +32,8 @@ namespace units
 			num = _num;
 			coords.r = _r;
 			sizes.r = _hr;
+			faces_up.r = 2.0 * M_PI * (_r + _hr / 2.0) * _hz;
+			faces_down.r = 2.0 * M_PI * (_r - _hr / 2.0) * _hz;
 			V = 2.0 * M_PI * coords.r * sizes.r * _hz;
 		};
 
