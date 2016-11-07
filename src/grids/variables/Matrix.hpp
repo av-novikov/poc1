@@ -565,7 +565,7 @@ Matrix<M, N, Container> abs(const Matrix<M, N, Container>& m)
 
 	for (uint i = 0; i < M; i++)
 		for (uint j = 0; j < N; j++)
-			result(i, j) = std::abs(m1(i, j));
+			result(i, j) = std::abs(m(i, j));
 
 	return result;
 };

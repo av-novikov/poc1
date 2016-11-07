@@ -6,6 +6,8 @@
 //#include "string.h"
 #include <math.h>
 #include <algorithm>
+#include <cassert>
+#include <cstring>
 //#include "point3d.h"
 #ifndef M_PI
   /* Constants rounded for 21 decimals. */
@@ -24,8 +26,8 @@
   #define M_SQRT2     1.41421356237309504880
   #define M_SQRT_2    0.707106781186547524401
 #endif
-  #define G_GRAVITY           9.80665 // м/с^2
-  #define GAS_CONST        8.3144621 //[Дж/(моль*K)]
+  #define G_GRAVITY           9.80665 // пїЅ/пїЅ^2
+  #define GAS_CONST        8.3144621 //[пїЅпїЅ/(пїЅпїЅпїЅпїЅ*K)]
 
 #if !defined M_SQRT_2 && defined M_SQRT1_2 // VC++2005
   #define M_SQRT_2 M_SQRT1_2
@@ -128,7 +130,7 @@ public:
   int size() const
     { return nn; }
     T* pointer() const
-    { Assert(!m_Err); return &(*VectorItems); }
+    { assert(!m_Err); return &(*VectorItems); }
     int  IsErr () const    // 0 - no Err
     { return m_Err; }
 
@@ -161,7 +163,7 @@ private:
   int operator != (const TBasicArray<T>&) const;
   TBasicArray<T>& operator = (const TBasicArray<T>&);
   template <class Y> TBasicArray<T>& operator = (const Y& a){
-    Assert(!m_Err);
+    assert(!m_Err);
     for (int i=0; i< nn; i++)
       VectorItems[i] = (T) a;
     return *this;
@@ -181,7 +183,7 @@ public:
     int column() const
     { return nj; }
   MCAPtr<T>* pointer() const
-    {/* Assert(!m_Err);*/ return &(*MatrixItems); }
+    {/* assert(!m_Err);*/ return &(*MatrixItems); }
     int IsErr() const
     { return m_Err; }    // 0 - no Error
 
@@ -214,7 +216,7 @@ private:
   int operator != (const TBasicArray2D<T>&) const;
   TBasicArray2D<T>& operator = (const TBasicArray2D<T>&);
   template <class Y> TBasicArray2D<T>& operator = (const Y& a){
-    Assert(!m_Err);
+    assert(!m_Err);
     for (int i=0; i< ni; i++)
         for(int j=0; j< nj; j++)
           MatrixItems[i][j] = (T) a;
@@ -224,6 +226,10 @@ private:
 
 template <class T> class TVector : public TBasicArray<T>
 {
+protected:
+  using TBasicArray<T>::m_Err;
+  using TBasicArray<T>::nn;
+  using TBasicArray<T>::VectorItems;
 public:
   TVector() : TBasicArray<T>() { }
   explicit  TVector(const int num) : TBasicArray<T>(num) { }
@@ -236,14 +242,14 @@ public:
   int operator != (const TVector<T>&) const;
   TVector<T>& operator = (const TVector<T>&);
     template <class Y> TVector<T>& operator = (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
     for (int i=0; i< nn; i++)
       VectorItems[i] = (T) a;
     return *this;
     }
   TVector<T> operator + (const TVector<T>&) const;
   template <class Y> TVector<T> operator + (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
         TVector<T> Temp(nn);
         for (int i=0; i< nn; i++)
       Temp[i] = (T) a + VectorItems[i];
@@ -251,14 +257,14 @@ public:
     }
     TVector<T> operator - (const TVector<T>&) const;
     template <class Y> TVector<T> operator - (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
     TVector<T> Temp(nn);
     for (int i=0; i< nn; i++)
       Temp[i] = VectorItems[i] - (T) a;
     return Temp;
     }
     template <class Y> TVector<T> operator * (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
       TVector<T> Temp(nn);
         for (int i=0; i< nn; i++)
             Temp[i] = (T) a * VectorItems[i];
@@ -266,34 +272,34 @@ public:
     }
   TVector<T> operator * (const TMatrix<T>&) const ;
     template <class Y> TVector<T> operator / (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
       TVector<T> Temp(nn);
         for (int i=0; i< nn; i++)
             Temp[i] = VectorItems[i]/((T) a);
         return Temp; 
     }
     template <class Y> TVector<T>& operator *= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i<nn; i++)
           VectorItems[i] *= (T) a;
       return *this;
     }   
     template <class Y> TVector<T>& operator /= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i<nn; i++)
           VectorItems[i] /= (T) a;
       return *this;
     }
     TVector<T>& operator += (const TVector<T>&);
     template <class Y> TVector<T>& operator += (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i<nn; i++)
           VectorItems[i] += (T) a;
       return *this;
     }
     TVector<T>& operator -= (const TVector<T>&);
     template <class Y> TVector<T>& operator -= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i<nn; i++)
           VectorItems[i] -= (T) a;
       return *this;
@@ -315,6 +321,11 @@ public:
 
 template <class T> class TMatrix : public TBasicArray2D<T>
 {
+protected:
+  using TBasicArray2D<T>::m_Err;
+  using TBasicArray2D<T>::ni;  //row
+  using TBasicArray2D<T>::nj;  //column
+  using TBasicArray2D<T>::MatrixItems;
 public:
     TMatrix() : TBasicArray2D<T>() { };
     TMatrix(const int _ni,const int _nj) : TBasicArray2D<T>(_ni,_nj) { }
@@ -327,7 +338,7 @@ public:
   int operator != (const TMatrix<T>&) const;
   TMatrix<T>& operator = (const TMatrix<T>&);
     template <class Y> TMatrix<T>& operator = (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
               MatrixItems[i][j] = (T) a;
@@ -335,7 +346,7 @@ public:
     }
     TMatrix<T> operator + (const TMatrix<T>&) const ;
     template <class Y> TMatrix<T> operator + (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
       TMatrix<T> Temp(ni,nj);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
@@ -345,7 +356,7 @@ public:
     TMatrix<T> operator - (const TMatrix<T>&) const;
   TMatrix<T> operator - () const;
     template <class Y> TMatrix<T> operator - (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
         TMatrix<T> Temp(ni,nj);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
@@ -355,7 +366,7 @@ public:
     TMatrix<T> operator * (const TMatrix<T>&) const ;
   TVector<T> operator * (const TVector<T>&) const ;
   template <class Y> TMatrix<T> operator * (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
         TMatrix<T> Temp(ni,nj);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
@@ -363,7 +374,7 @@ public:
         return Temp; 
     }
     template <class Y> TMatrix<T> operator / (const Y &a) const {
-    Assert(!m_Err);
+    assert(!m_Err);
         TMatrix<T> Temp(ni,nj);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
@@ -371,14 +382,14 @@ public:
         return Temp; 
     }
     template <class Y> TMatrix<T>& operator *= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
             MatrixItems[i][j] *= (T) a;
       return *this;
     }   
     template <class Y> TMatrix<T>& operator /= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
             MatrixItems[i][j] /= (T) a;
@@ -386,7 +397,7 @@ public:
     }
     TMatrix<T>& operator += (const TMatrix<T>&);
     template <class Y> TMatrix<T>& operator += (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
             MatrixItems[i][j] += (T) a;
@@ -394,7 +405,7 @@ public:
     }
     TMatrix<T>& operator -= (const TMatrix<T>&);
     template <class Y> TMatrix<T>& operator -= (const Y &a){
-    Assert(!m_Err);
+    assert(!m_Err);
       for (int i=0; i< ni; i++)
           for(int j=0; j< nj; j++)
             MatrixItems[i][j] -= (T) a;
@@ -421,14 +432,14 @@ public:
 
     // Ruzana
     void Inverse();  
-    // C = A*B для выполнения меньшего количества операций  
+    // C = A*B пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  
     void Multiplication_and_Equating(const TMatrix<T>& A,const TMatrix<T>& B);
 };
 
 /****************************************************   TBasicArray    *****************************************************/
 template <class T>
 void TBasicArray<T> :: Initialize(const int _nn){
- // Assert(_nn!=0);
+ // assert(_nn!=0);
   m_Err=0;
   nn=_nn;
 
@@ -437,7 +448,7 @@ void TBasicArray<T> :: Initialize(const int _nn){
 }
 template <class T>
 void TBasicArray<T> :: Initialize(const TBasicArray<T> &A){
- // Assert(!A.IsErr());
+ // assert(!A.IsErr());
   m_Err=0;
   nn = A.size();
 
@@ -479,8 +490,8 @@ int TBasicArray<T> :: operator != (const TBasicArray<T> &A) const
 template <class T>
 TBasicArray<T>& TBasicArray<T> :: operator = (const TBasicArray<T> &A)
 {
-  Assert(!m_Err);
-  Assert(nn==A.size());
+  assert(!m_Err);
+  assert(nn==A.size());
   for (int i=0; i<nn; i++)
     VectorItems[i] = A.VectorItems[i];
   return *this;
@@ -495,12 +506,12 @@ void TBasicArray2D<T> :: Initialize(const int _ni, const int _nj){
   MatrixItems = new MCAPtr<T>[ni];
   for (int i=0; i<ni; i++) {
     MatrixItems[i] = new T[nj];
-    memset (MatrixItems[i], 0, sizeof(T)*nj);
+    std::memset (MatrixItems[i], 0, sizeof(T)*nj);
   }
 }
 template <class T>
 void TBasicArray2D<T> :: Initialize(const TBasicArray2D<T> &A){
-  //Assert(!A.IsErr());
+  //assert(!A.IsErr());
   m_Err=0;
   ni = A.row();
   nj = A.column();
@@ -549,8 +560,8 @@ int TBasicArray2D<T> :: operator != (const TBasicArray2D<T> &A) const
 }
 template <class T>
 TBasicArray2D<T>& TBasicArray2D<T> :: operator = (const TBasicArray2D<T> &A){
-  Assert(!m_Err);
-  Assert((ni==A.row()) && (nj==A.column()));
+  assert(!m_Err);
+  assert((ni==A.row()) && (nj==A.column()));
   for (int i=0; i< ni; i++)
     for (int j=0; j< nj; j++)
       MatrixItems[i][j] = A.MatrixItems[i][j];
@@ -558,21 +569,21 @@ TBasicArray2D<T>& TBasicArray2D<T> :: operator = (const TBasicArray2D<T> &A){
 }
 /****************************************************   TVector    *****************************************************/
 template <class Y, class Z> TVector<Z> operator * (const Y &a, const TVector<Z>& B){
-  Assert(!B.IsErr());
+  assert(!B.IsErr());
   TVector<Z> Temp(B.size());
   for (int i =0; i< B.size(); i++)
     Temp[i] = ((Z) a)*B[i];
   return Temp;
     }
 template <class Y, class Z> TVector<Z> operator + (const Y &a, const TVector<Z>& B){
-    Assert(!B.IsErr());  
+    assert(!B.IsErr());
   TVector<Z> Temp(B.size());
       for (int i =0; i< B.size(); i++)
           Temp[i] = ((Z) a) + B[i];
       return Temp;
     }
 template <class Y, class Z> TVector<Z> operator - (const Y &a, const TVector<Z>& B){
-    Assert(!B.IsErr());  
+    assert(!B.IsErr());
   TVector<Z> Temp(B.size());
       for (int i =0; i< B.size(); i++)
       Temp[i] = ((Z) a) - B[i];
@@ -597,16 +608,16 @@ int TVector<T> :: operator != (const TVector<T> &A) const
 }
 template <class T>
 TVector<T>& TVector<T>::operator = (const TVector<T>& A){
- // Assert(!m_Err);
- // Assert(A.size()==nn);
+ // assert(!m_Err);
+ // assert(A.size()==nn);
   for (int i=0; i<nn; i++)
     VectorItems[i] = A[i];
   return *this;  
 }
 template <class T>
 TVector<T> TVector<T>::operator + (const TVector<T>& A) const {
-  Assert(!m_Err);
-  Assert(nn==A.size());
+  assert(!m_Err);
+  assert(nn==A.size());
   TVector<T> Temp(nn);
   for (int i=0; i< nn; i++)
     Temp[i] = A[i]+VectorItems[i];
@@ -614,8 +625,8 @@ TVector<T> TVector<T>::operator + (const TVector<T>& A) const {
 }
 template <class T>
 TVector<T> TVector<T>::operator - (const TVector<T>& A) const {
-  Assert(!m_Err);
-  Assert(nn==A.size());
+  assert(!m_Err);
+  assert(nn==A.size());
   TVector<T> Temp(nn);
   for (int i=0; i< nn; i++)
     Temp[i] = VectorItems[i]-A[i];
@@ -624,9 +635,9 @@ TVector<T> TVector<T>::operator - (const TVector<T>& A) const {
 template <class T>
 TVector<T> TVector<T>::operator * (const TMatrix<T>& B) const {
     //  TVector x  TMatrix
-    Assert(!m_Err);
-    Assert(!B.IsErr());
-    Assert(nn==B.row());
+    assert(!m_Err);
+    assert(!B.IsErr());
+    assert(nn==B.row());
   TVector<T> Temp(B.column());
 
   for (int i =0; i< Temp.size(); i++)
@@ -638,24 +649,24 @@ TVector<T> TVector<T>::operator * (const TMatrix<T>& B) const {
 }
 template <class T>
 TVector<T>& TVector<T>::operator += (const TVector<T>& A){
-  Assert(!m_Err);
-  Assert(nn==A.size());
+  assert(!m_Err);
+  assert(nn==A.size());
   for (int i=0; i<nn; i++)
     VectorItems[i] += A[i];
   return *this;
 }
 template <class T>
 TVector<T>& TVector<T>::operator -= (const TVector<T>& A){
-  Assert(!m_Err);
-  Assert(nn==A.size());
+  assert(!m_Err);
+  assert(nn==A.size());
   for (int i=0; i<nn; i++)
     VectorItems[i] -= A[i];
   return *this;
 }
 template <class T>
 T TVector<T>::MultScalar (const TVector<T>& B) const {
-  Assert((!m_Err)&&(!B.IsErr()));
-  Assert(nn==B.size());
+  assert((!m_Err)&&(!B.IsErr()));
+  assert(nn==B.size());
   T res = 0.;
   for (int i =0; i< nn; i++)
     res += VectorItems[i]*B[i];
@@ -663,7 +674,7 @@ T TVector<T>::MultScalar (const TVector<T>& B) const {
 }
 template <class T>
 TMatrix<T> TVector<T>::MultMatrix(const TVector<T>& A) const {
-  Assert((!m_Err)&&(!A.IsErr()));
+  assert((!m_Err)&&(!A.IsErr()));
   TMatrix<T> Temp(nn,A.size());
   for(int i=0; i<nn; i++)
     for(int j=0; j<A.size(); j++)
@@ -672,7 +683,7 @@ TMatrix<T> TVector<T>::MultMatrix(const TVector<T>& A) const {
 }
 template <class T>
 T TVector<T> :: Norm() const {
-  Assert(!m_Err);
+  assert(!m_Err);
   T res = 0.;
   for (int i =0; i< nn; i++)
     res += VectorItems[i]*VectorItems[i];
@@ -680,14 +691,14 @@ T TVector<T> :: Norm() const {
 }
 template <class T>
 void TVector<T> :: Normalize(){
-  Assert(!m_Err);
-  T norm = Norm2();
+  assert(!m_Err);
+  T norm = Norm();
   for (int i =0; i< nn; i++)
     VectorItems[i] = VectorItems[i]/norm;
 }
 template <class T>
 T TVector<T> :: Max() const {
-  Assert(!m_Err);
+  assert(!m_Err);
   T max = VectorItems[0];
   for (int i =1; i< nn; i++)
     if(max < VectorItems[i]) max = VectorItems[i];
@@ -695,7 +706,7 @@ T TVector<T> :: Max() const {
 }
 template <class T>
 T TVector<T> :: Min() const {
-  Assert(!m_Err);
+  assert(!m_Err);
   T min = VectorItems[0];
   for (int i =1; i< nn; i++)
     if(min > VectorItems[i]) min = VectorItems[i];
@@ -703,14 +714,14 @@ T TVector<T> :: Min() const {
 }
 template <class T>
 void TVector<T> :: Print (const char * szFile) const {
-  //Assert(!m_Err);
+  //assert(!m_Err);
   //MCFile file(szFile,_T("wt"));
   //for (int i=0; i < nn; i++)
   //  _ftprintf(file, _T("%20.10f \n"),VectorItems[i]);  //  !!! 20.10f
 }
 template <class T>
 void TVector<T> :: Probe () const {
-  Assert(!m_Err);
+  assert(!m_Err);
   long ltime = time(NULL);
   int stime = (unsigned) ltime/2;
   srand(stime); //srand(time(NULL));
@@ -719,7 +730,7 @@ void TVector<T> :: Probe () const {
 }
 /****************************************************   TMatrix    *****************************************************/
 template <class Y,class Z> TMatrix<Z> operator * (const Y &a, const TMatrix<Z> &B){
-  Assert(!B.IsErr());
+  assert(!B.IsErr());
       TMatrix<Z> Temp(B.row(),B.column());
       for (int i=0; i< B.row(); i++)
           for(int j=0; j< B.column(); j++)
@@ -727,7 +738,7 @@ template <class Y,class Z> TMatrix<Z> operator * (const Y &a, const TMatrix<Z> &
       return Temp;
     }
 template <class Y,class Z> TMatrix<Z> operator + (const Y &a, const TMatrix<Z> &B){
-  Assert(!B.IsErr());
+  assert(!B.IsErr());
       TMatrix<Z> Temp(B.row(),B.column());
       for (int i=0; i< B.row(); i++)
           for(int j=0; j< B.column(); j++)
@@ -735,7 +746,7 @@ template <class Y,class Z> TMatrix<Z> operator + (const Y &a, const TMatrix<Z> &
       return Temp;
     }
 template <class Y,class Z> TMatrix<Z> operator - (const Y &a, const TMatrix<Z> &B){
-  Assert(!B.IsErr());
+  assert(!B.IsErr());
       TMatrix<Z> Temp(B.row(),B.column());
       for (int i=0; i< B.row(); i++)
           for(int j=0; j< B.column(); j++)
@@ -745,9 +756,9 @@ template <class Y,class Z> TMatrix<Z> operator - (const Y &a, const TMatrix<Z> &
 template <class T>
 TVector<T> TMatrix<T>::operator * (const TVector<T>& B) const {
   //  TMatrix x  TVector
-  Assert(!m_Err);
-  Assert(!B.IsErr());
-  Assert(nj==B.size());
+  assert(!m_Err);
+  assert(!B.IsErr());
+  assert(nj==B.size());
   TVector<T> Temp(ni);
 
   for (int i =0; i< Temp.size(); i++)
@@ -777,8 +788,8 @@ int TMatrix<T> :: operator != (const TMatrix<T> &A) const
 }
 template <class T>
 TMatrix<T>& TMatrix<T>::operator = (const TMatrix<T>& A){
- // Assert(!m_Err);
- // Assert((A.row()==ni)&&(A.column()==nj));
+ // assert(!m_Err);
+ // assert((A.row()==ni)&&(A.column()==nj));
   for (int i=0; i< ni; i++)
     for (int j=0; j< nj; j++)
       MatrixItems[i][j] = A[i][j];
@@ -787,8 +798,8 @@ TMatrix<T>& TMatrix<T>::operator = (const TMatrix<T>& A){
 template <class T>
 TMatrix<T> TMatrix<T>::operator * (const TMatrix<T> &B) const 
 {
-  //Assert(!m_Err);
- // Assert(nj==B.row());
+  //assert(!m_Err);
+ // assert(nj==B.row());
  
   TMatrix<T> Temporary(ni,B.column());
   
@@ -805,8 +816,8 @@ TMatrix<T> TMatrix<T>::operator * (const TMatrix<T> &B) const
 template <class T>
 TMatrix<T>& TMatrix<T>:: operator += (const TMatrix<T> &A)
 {
-  Assert(!m_Err);
-  Assert((ni==A.row()) && (nj==A.column()));
+  assert(!m_Err);
+  assert((ni==A.row()) && (nj==A.column()));
   for (int i=0; i< ni; i++)
     for (int j=0; j< nj; j++)
       MatrixItems[i][j] += A[i][j];
@@ -815,8 +826,8 @@ TMatrix<T>& TMatrix<T>:: operator += (const TMatrix<T> &A)
 template <class T> 
 TMatrix<T>& TMatrix<T>:: operator -= (const TMatrix<T> &A)
 {
-  Assert(!m_Err);
-  Assert((ni==A.row()) && (nj==A.column()));
+  assert(!m_Err);
+  assert((ni==A.row()) && (nj==A.column()));
   for (int i=0; i< ni; i++)
     for (int j=0; j< nj; j++)
       MatrixItems[i][j] -= A[i][j];
@@ -825,8 +836,8 @@ TMatrix<T>& TMatrix<T>:: operator -= (const TMatrix<T> &A)
 template <class T>
 TMatrix<T> TMatrix<T>:: operator + (const TMatrix<T> &A) const 
 {
-  Assert(!m_Err);
-  Assert((ni==A.row()) && (nj==A.column()));
+  assert(!m_Err);
+  assert((ni==A.row()) && (nj==A.column()));
   TMatrix<T> Temp(ni,nj);
   for (int i = 0; i< ni; i++)
     for (int j = 0; j< nj; j++)
@@ -836,8 +847,8 @@ TMatrix<T> TMatrix<T>:: operator + (const TMatrix<T> &A) const
 template <class T>
 TMatrix<T> TMatrix<T>:: operator - (const TMatrix<T> &A) const
 {
-  Assert(!m_Err);
-  Assert((ni==A.row()) && (nj==A.column()));
+  assert(!m_Err);
+  assert((ni==A.row()) && (nj==A.column()));
   TMatrix<T> Temp(ni,nj);
   for (int i = 0; i< ni; i++)
     for (int j = 0; j< nj; j++)
@@ -847,7 +858,7 @@ TMatrix<T> TMatrix<T>:: operator - (const TMatrix<T> &A) const
 template <class T>
 TMatrix<T> TMatrix<T>:: operator - () const 
 {
-  Assert(!m_Err);
+  assert(!m_Err);
   TMatrix<T> Temp(ni,nj);
   for (int i = 0; i< ni; i++)
     for (int j = 0; j< nj; j++)
@@ -856,7 +867,7 @@ TMatrix<T> TMatrix<T>:: operator - () const
 }
 template <class T>
 TVector<T> TMatrix<T>::row(const int i){
-  Assert(!m_Err);
+  assert(!m_Err);
   TVector<T> Temp(nj);
   for(int j=0; j<nj; j++)
     Temp[j] = MatrixItems[i][j];
@@ -864,7 +875,7 @@ TVector<T> TMatrix<T>::row(const int i){
 }
 template <class T>
 TVector<T> TMatrix<T>::column(const int j){
-  Assert(!m_Err);
+  assert(!m_Err);
   TVector<T> Temp(ni);
   for(int i=0; i<ni; i++)
     Temp[i] = MatrixItems[i][j];
@@ -873,7 +884,7 @@ TVector<T> TMatrix<T>::column(const int j){
 template <class T>
 T TMatrix<T> :: Max() const 
 {
-  Assert(!m_Err);
+  assert(!m_Err);
   T max = MatrixItems[0][0];
   for (int i = 0; i< ni; i++)
     for (int j = 0; j< nj; j++)
@@ -883,7 +894,7 @@ T TMatrix<T> :: Max() const
 template <class T>
 T TMatrix<T> :: Min() const 
 {
-  Assert(!m_Err);
+  assert(!m_Err);
   T min = MatrixItems[0][0];
   for (int i = 0; i< ni; i++)
     for (int j = 0; j< nj; j++)
@@ -893,7 +904,7 @@ T TMatrix<T> :: Min() const
 template <class T>
 void TMatrix<T> :: Print (const char * szFile) const 
 {
-  //Assert(!m_Err);
+  //assert(!m_Err);
   //MCFile file(szFile,_T("wt"));
   //for (int i=0; i < ni; i++)  {
   //  for (int j=0; j < nj; j++)  {
@@ -906,7 +917,7 @@ void TMatrix<T> :: Print (const char * szFile) const
 template <class T>
 TMatrix<T> TMatrix<T> :: Transpose() const 
 {
-    Assert(!m_Err);
+    assert(!m_Err);
     TMatrix<T> Temp(nj,ni);
     for(int i=0; i< ni; i++)
         for(int j=0; j< nj; j++)
@@ -924,7 +935,7 @@ T TMatrix<T> :: Trace() const {
 }
 template <class T>
 int TMatrix<T> :: IsSymmetric() const {
-  // Assert(!m_Err);
+  // assert(!m_Err);
     for(int i=0; i< ni; i++)
         for(int j=0; j< nj; j++)
             if(MatrixItems[i][j]!=MatrixItems[j][i])return 0;
@@ -934,8 +945,8 @@ int TMatrix<T> :: IsSymmetric() const {
 template <class T>
 void TMatrix<T> :: Multiplication_and_Equating(const TMatrix<T>& A,const TMatrix<T>& B)
 {
-//  Assert(!m_Err);
-//  Assert(ni == A.ni && nj==B.nj && A.nj == B.ni);
+//  assert(!m_Err);
+//  assert(ni == A.ni && nj==B.nj && A.nj == B.ni);
   int i,j,l;
   int A_i = A.row();
   int A_j = A.column();
@@ -956,7 +967,7 @@ void TMatrix<T> :: Multiplication_and_Equating(const TMatrix<T>& A,const TMatrix
 template <class T>
 void TMatrix<T> :: Inverse()
 {
-    Assert(!m_Err);
+    assert(!m_Err);
  int i,j,k,l,N,N2;
  T det=1.0;
  T temp;
@@ -1065,7 +1076,7 @@ void TMatrix<T> :: Inverse()
 template <class T>
 void TMatrix<T> :: Probe () const 
 {
-  Assert(!m_Err);
+  assert(!m_Err);
   long ltime = time(NULL);
   int stime = (unsigned) ltime/2;
   srand(stime); //srand(time(NULL));
@@ -1080,7 +1091,7 @@ void TMatrix<T> :: Probe () const
 template <class T>
 TMatrix<T> MatrixInverse(const TMatrix<T> &ptMatrix){
   // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
-  Assert(!ptMatrix.IsErr());
+  assert(!ptMatrix.IsErr());
   int pivsign;
   int ni = ptMatrix.row();
   int nj = ptMatrix.column();
@@ -1110,7 +1121,7 @@ TMatrix<T> MatrixInverse(const TMatrix<T> &ptMatrix){
     for (int i = 0; i < ni; i++) {
       LUrowi = LU_Matrix[i];
       // Most of the time is spent in the following dot product.
-      int kmax = min(i,j);
+      int kmax = std::min(i,j);
       double s = 0.0;
       for (int k = 0; k < kmax; k++) {
         s += LUrowi[k]*LUcolj[k];

@@ -89,15 +89,15 @@ namespace grids
 		Variable convergance(/*std::vector<Cell>::iterator& maxIt, */)
 		{
 			Variable err, cur_err;
-			std::vector<std::vector<Cell>::iterator> it (Variable::size, cells.begin());
+			/*std::vector<std::vector<Cell>::iterator> it (Variable::size, cells.begin());
 
 			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
 			{
 				cur_err = data::abs(data::divide(cell.u_next - cell.u_iter, cell.u_next));
 				//if(data::max(err, cur_err) == err)
-			});
+			});*/
 
-			return 0.0;
+			return err;
 		};
 	};
 };

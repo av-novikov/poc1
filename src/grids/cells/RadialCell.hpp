@@ -24,7 +24,10 @@ namespace units
 		using Base::num;
 		using Base::coords;
 		using Base::sizes;
+		using Base::faces_up;
+		using Base::faces_down;
 		using Base::V;
+		using Base::dim;
 	public:
 		RadialCell() {};
 

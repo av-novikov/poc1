@@ -10,7 +10,7 @@
 //
 //#include "winutil/interact.h"
 
-#define DUMMY_VALUE     -999 // А есть ведь уже INCATIVE_VALUE!!
+#define DUMMY_VALUE     -999 // пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ INCATIVE_VALUE!!
 
 // h_cur = x_{i} - x_{i-1}
 // dy_cur = y_{i} - y_{i-1}
@@ -1525,7 +1525,7 @@ void MC_Eigenvalue::tql2(){
   double eps = pow(2.0,-52.0);
   for (int l = 0; l < size; l++) {
      // Find small subdiagonal element
-	  tst1 = std::max(tst1,abs(Eigendouble[l]) + abs(EigenImg[l]));
+	  tst1 = std::max(tst1,fabs(Eigendouble[l]) + fabs(EigenImg[l]));
      int m = l;
 
     // Original while-loop from Java code

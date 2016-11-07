@@ -43,6 +43,8 @@ private:
 // and uses object delete operator
 template<class T> class MCPtr : public MCPtrBase<T>
 {
+protected:
+	using MCPtrBase<T>::m_p;
 public:
   /*explicit*/ MCPtr(T* pointer=NULL) { m_p=pointer; }
   ~MCPtr() { delete m_p; }
@@ -59,6 +61,8 @@ private:
 // and uses array delete[]
 template<class T> class MCAPtr : public MCPtrBase<T>
 {
+protected:
+	using MCPtrBase<T>::m_p;
 public:
   /*explicit*/ MCAPtr(T array[]=NULL) { m_p=array; }
   ~MCAPtr() { delete[] m_p; }
@@ -78,6 +82,8 @@ private:
 
 template<class T> class MCRef : public MCPtrBase<T>
 {
+protected:
+	using MCPtrBase<T>::m_p;
 public:
   /*explicit*/ MCRef(T* pointer=NULL) { m_p=pointer; if(m_p) m_p->AddRef(); }
   ~MCRef() { if(m_p) m_p->Release(); }
