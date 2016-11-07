@@ -22,6 +22,7 @@ namespace grids
 		typedef BasicIterator<RadialGrid> Iterator;
 		using typename Base::Cell;
 		using typename Base::Point;
+		using typename Base::TPoint;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
 		using typename Base::Indexes;
@@ -59,7 +60,15 @@ namespace grids
 		{
 			return Iterator(&cells[0], { 0 }, { totalSize }, { totalSize });
 		};
-
+		inline std::initializer_list<Iterator> getNeighbours(const Iterator& it)
+		{
+			return{};
+		};
+		inline std::initializer_list<Iterator> getNeighboursPlus(const Iterator& it)
+		{
+			return{};
+		};
+		
 	public:
 		RadialGrid() : Base() {};
 		RadialGrid(const Geometry& _geom)
@@ -87,14 +96,14 @@ namespace grids
 
 			for (uint i = 0; i < geom.size_ghost; i++)
 			{
-				cells.push_back( Cell(counter++, cm, hr, geom.hz) );
+				cells.emplace_back( counter++, cm, hr, geom.hz );
 				cm += hr;
 			}
 			for (uint i = 0; i < geom.size; i++)
 			{
 				cm = r_prev * (1.0 + exp(logStep)) / 2.0;
 				hr = r_prev * (exp(logStep) - 1.0);
-				cells.push_back( Cell(counter++, cm, hr, geom.hz) );
+				cells.emplace_back( counter++, cm, hr, geom.hz );
 
 				Volume += cells[cells.size() - 1].V;
 				r_prev = r_prev * exp(logStep);
@@ -102,7 +111,7 @@ namespace grids
 			for (uint i = 0; i < geom.size_ghost; i++)
 			{
 				cm += hr;
-				cells.push_back(Cell(counter++, cm, hr, geom.hz));
+				cells.emplace_back( counter++, cm, hr, geom.hz );
 			}
 		};
 	};

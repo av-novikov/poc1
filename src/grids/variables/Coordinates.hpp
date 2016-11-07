@@ -66,9 +66,10 @@ namespace data
 	// Points
 	/*-------------------------------------------------------------------*/
 
+	template <typename TDataType>
 	struct Point1dContainer
 	{
-		typedef Scalar DataType;
+		typedef TDataType DataType;
 		typedef Size1d IndexesType;
 
 		union {
@@ -80,8 +81,12 @@ namespace data
 		static const uint size;
 	};
 
-	const uint Point1dContainer::size = 1;
-	typedef Vector<1, Point1dContainer> Point1d;
+	template <typename TDataType>
+	const uint Point1dContainer<TDataType>::size = 1;
+	template<typename TDataType> using Point1d = Vector<1, Point1dContainer<TDataType>>;
+
+	template<typename Variable,	template<typename Variable> typename PointContainer> using Flux = 
+					Vector<Variable::size, PointContainer<Variable>>;
 
 };
 

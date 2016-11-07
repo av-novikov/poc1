@@ -21,6 +21,9 @@ namespace models
 		typedef typename Grid::Variable Variable;
 		typedef	typename Grid::DependentVariable DependentVariable;
 		typedef typename Grid::Cell Cell;
+		typedef typename Cell::Point Point;
+		template<typename DataType> using TPoint = typename Cell::template TPoint<DataType>;
+		typedef typename data::Flux<Variable, TPoint> Flux;
 
 		std::string id;
 	protected:
@@ -59,6 +62,9 @@ namespace models
 			snapshotter->dump(i);
 		};
 
+		inline Variable& getU(const Cell& cell) const;
+		inline Flux& getF(const Cell& cell) const;
+		inline Variable& getQ(const Cell& cell) const;
 	};
 };
 

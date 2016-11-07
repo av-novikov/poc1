@@ -16,6 +16,7 @@ namespace units
 	public:
 		typedef AbstractCell<Point1d, TVariable, TDependentVariable> Base;
 		using typename Base::Point;
+		using typename Base::TPoint;
 		using typename Base::Indexes;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;

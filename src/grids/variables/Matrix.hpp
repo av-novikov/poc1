@@ -480,12 +480,11 @@ bool operator!=(const Matrix<M, N, Container1>& m1,
 	return !(m1 == m2);
 }
 
-/**
- * Definition of Vector class
- */
-template<uint M, typename Container = DefaultMatrixContainer<M, 1> > using Vector = Matrix<M, 1, Container>;
-}
-;
+	/**
+	 * Definition of Vector class
+	 */
+	template<uint M, typename Container = DefaultMatrixContainer<M, 1> > using Vector = Matrix<M, 1, Container>;
+};
 
 namespace std {
 using data::uint;

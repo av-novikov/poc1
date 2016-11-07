@@ -14,11 +14,8 @@ template<typename Variable> using Grid = grids::RadialGrid<Variable>;
 int main() 
 {
 	typedef data::Var1phase Variable;
-	typedef units::RadialCell<Variable> Cell;
-	typedef Grid<Variable>::Iterator Iterator;
 	typedef models::AbstractModel<Grid<Variable>> Model;
 
-	Grid<Variable> grid;
 	Grid<Variable>::Geometry geom;
 	geom.r_w = 0.1;
 	geom.r_e = 100.0;

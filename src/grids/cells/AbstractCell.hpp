@@ -16,28 +16,30 @@ namespace units {
  @tparam Variable Type of container that has vector of variables
  @tparam DependentVariable Type of container that has all dependent variables which need to be stored
  */
-	template<typename PointType,
+	template<template<typename> typename PointType,
 	typename TVariable, typename TDependentVariable = data::EmptyContainer>
 	class AbstractCell
 	{
 	public:
-		typedef PointType Point;
-		typedef typename PointType::Base::IndexesType Indexes;
+		typedef PointType<Scalar> Point;
+		template<typename DataType> using TPoint = PointType<DataType>;
+		typedef typename Point::Base::IndexesType Indexes;
 		typedef TVariable Variable;
 		typedef TDependentVariable DependentVariable;
 	public:
 		// Geometry dimension of cell
 		static const uint dim;
 		// Center of cell
-		PointType coords;
+		Point coords;
 		// Cell sizes;
-		PointType sizes;
+		Point sizes;
 		// Cell faces
-		PointType faces_up;
-		PointType faces_down;
+		Point faces_up;
+		Point faces_down;
 
 		// Number of cell in grid
 		int num;
+
 		// Volume of cell
 		Scalar V;
 
@@ -54,14 +56,14 @@ namespace units {
 		AbstractCell& operator=(const AbstractCell& cell) = default;
 	};
 
-	template<typename PointType,
+	template<template<typename> typename PointType,
 	typename TVariable, typename TDependentVariable>
-	const uint AbstractCell<PointType, TVariable, TDependentVariable>::dim = PointType::size;
+	const uint AbstractCell<PointType, TVariable, TDependentVariable>::dim = PointType<Scalar>::size;
 };
 
 namespace std
 {
-	template<typename PointType,
+	template<template<typename> typename PointType,
 	typename TVariable, typename TDependentVariable = data::EmptyContainer>
 	inline std::ostream& operator<<(std::ostream& os, const units::AbstractCell<PointType, TVariable, TDependentVariable>& cell)
 	{

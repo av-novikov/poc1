@@ -18,6 +18,7 @@ namespace grids
 	public:
 		typedef CellType Cell;
 		typedef typename Cell::Point Point;
+		template<typename DataType> using TPoint = typename Cell::template TPoint<DataType>;
 		typedef typename Cell::Variable Variable;
 		typedef typename Cell::DependentVariable DependentVariable;
 		typedef typename Cell::Indexes Indexes;
