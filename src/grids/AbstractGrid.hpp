@@ -53,8 +53,51 @@ namespace grids
 			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
 			{
 				cell.u_prev = cell.u_iter = cell.u_next = getInitialVariables(cell.coords).u_next;
-				cell.d_prev = cell.d_iter = cell.d_next = getInitialVariables(cell.coords).d_next;;
+				cell.d_prev = cell.d_iter = cell.d_next = getInitialVariables(cell.coords).d_next;
 			});
+		};
+
+		void copyIterLayer()
+		{
+			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
+			{
+				cell.u_iter = cell.u_next;
+				cell.d_iter = cell.d_next;
+			});
+		};
+
+		void copyTimeLayer()
+		{
+			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
+			{
+				cell.u_prev = cell.u_iter = cell.u_next;
+				cell.d_prev = cell.d_iter = cell.d_next;
+			});
+		};
+
+		Variable& getAverage() const
+		{
+			Variable var;
+			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
+			{
+				var += cell.u_next * cell.V;
+			});
+
+			return var / Volume;
+		};
+
+		Variable convergance(/*std::vector<Cell>::iterator& maxIt, */)
+		{
+			Variable err, cur_err;
+			std::vector<std::vector<Cell>::iterator> it (Variable::size, cells.begin());
+
+			std::for_each(cells.begin(), cells.end(), [&, this](Cell& cell)
+			{
+				cur_err = data::abs(data::divide(cell.u_next - cell.u_iter, cell.u_next));
+				//if(data::max(err, cur_err) == err)
+			});
+
+			return 0.0;
 		};
 	};
 };

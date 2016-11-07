@@ -5,7 +5,6 @@
 #include <string>
 #include <cassert>
 
-//#include "src/grids/variables/Variables.hpp"
 #include "src/snapshot/VTKSnapshotter.hpp"
 
 namespace models

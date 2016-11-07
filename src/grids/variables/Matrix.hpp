@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 #define EQUALITY_TOLERANCE 1.E-8
 
@@ -116,6 +117,9 @@ public:
 	 * Transposes square matrix (modifies matrix contents).
 	 */
 	void transposeInplace();
+
+	Matrix<M, N, Container>& operator+=(const Matrix<M, N, Container>& m);
+	Matrix<M, N, Container>& operator-=(const Matrix<M, N, Container>& m);
 };
 
 template<uint M, uint N, typename Container>
@@ -265,8 +269,19 @@ Matrix<M, N, DefaultMatrixContainer<M, N>> operator+(
  */
 template<uint M, uint N, typename Container>
 Matrix<M, N, Container> operator+(const Matrix<M, N, Container>& m1,
-		const Matrix<M, N, Container>& m2) {
+		const Matrix<M, N, Container>& m2) 
+{
 	return operator+<M, N, Container, Container, Container>(m1, m2);
+}
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>& Matrix<M, N, Container>::operator+=(const Matrix<M, N, Container>& m)
+{
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			(*this)(i, j) += m(i, j);
+
+	return *this;
 }
 
 /**
@@ -332,6 +347,16 @@ template<uint M, uint N, typename Container>
 Matrix<M, N, Container> operator-(const Matrix<M, N, Container>& m1,
 		const Matrix<M, N, Container>& m2) {
 	return operator-<M, N, Container, Container, Container>(m1, m2);
+}
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container>& Matrix<M, N, Container>::operator-=(const Matrix<M, N, Container>& m)
+{
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			(*this)(i, j) -= m(i, j);
+
+	return *this;
 }
 
 /**
@@ -479,6 +504,71 @@ bool operator!=(const Matrix<M, N, Container1>& m1,
 		const Matrix<M, N, Container2>& m2) {
 	return !(m1 == m2);
 }
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> multiply(const Matrix<M, N, Container>& m1, const Matrix<M, N, Container>& m2)
+{
+	Matrix<M, N, Container> result;
+
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			result(i, j) = m1(i, j) * m2(i, j);
+
+	return result;
+};
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> divide(const Matrix<M, N, Container>& m1, const Matrix<M, N, Container>& m2)
+{
+	Matrix<M, N, Container> result;
+
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+		{
+			if (std::abs(m2(i, j)) > EQUALITY_TOLERANCE)
+				result(i, j) = m1(i, j) / m2(i, j);
+			else
+				result(i, j) = std::numeric_limits<Scalar>::infinity();
+		}
+
+	return result;
+};
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> max(const Matrix<M, N, Container>& m1, const Matrix<M, N, Container>& m2)
+{
+	Matrix<M, N, Container> result;
+
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			result(i, j) = std::max(m1(i, j), m2(i, j));
+
+	return result;
+};
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> min(const Matrix<M, N, Container>& m1, const Matrix<M, N, Container>& m2)
+{
+	Matrix<M, N, Container> result;
+
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			result(i, j) = std::min(m1(i, j), m2(i, j));
+
+	return result;
+};
+
+template<uint M, uint N, typename Container>
+Matrix<M, N, Container> abs(const Matrix<M, N, Container>& m)
+{
+	Matrix<M, N, Container> result;
+
+	for (uint i = 0; i < M; i++)
+		for (uint j = 0; j < N; j++)
+			result(i, j) = std::abs(m1(i, j));
+
+	return result;
+};
 
 	/**
 	 * Definition of Vector class
