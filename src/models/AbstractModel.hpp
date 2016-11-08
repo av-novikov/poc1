@@ -23,6 +23,8 @@ namespace models
 		typedef typename Cell::Point Point;
 		template<typename DataType> using TPoint = typename Cell::template TPoint<DataType>;
 		typedef typename data::Flux<Variable, TPoint> Flux;
+		typedef typename Grid::Iterator Iterator;
+		typedef typename Grid::RangeIterator RangeIterator;
 
 		std::string id;
 	protected:
@@ -61,9 +63,9 @@ namespace models
 			snapshotter->dump(i);
 		};
 
-		inline Variable& getU(const Cell& cell) const;
-		inline Flux& getF(const Cell& cell) const;
-		inline Variable& getQ(const Cell& cell) const;
+		//virtual Variable& getU(const Cell& cell) const = 0;
+		//virtual Flux& getF(const Cell& cell) const = 0;
+		//virtual  Variable& getQ(const Cell& cell) const = 0;
 	};
 };
 

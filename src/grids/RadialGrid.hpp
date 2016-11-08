@@ -9,6 +9,8 @@
 #include <vtkSmartPointer.h>
 #include <vtkPolyData.h>
 
+#include <vector>
+
 /** 
  Implementation of simple radial 1D grid
  */
@@ -19,13 +21,14 @@ namespace grids
 	{
 	public:
 		typedef AbstractGrid<units::RadialCell<TVariable, TDependentVariable> > Base;
-		typedef BasicIterator<RadialGrid> Iterator;
 		using typename Base::Cell;
 		using typename Base::Point;
 		using typename Base::TPoint;
 		using typename Base::Variable;
 		using typename Base::DependentVariable;
 		using typename Base::Indexes;
+		typedef typename std::vector<Cell>::iterator Iterator;
+		typedef typename Range<Iterator> RangeIterator;
 		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
 		typedef vtkSmartPointer<vtkXMLPolyDataWriter> VtkWriterPtr;
 		typedef struct 
@@ -48,25 +51,35 @@ namespace grids
 
 	// All iterators
 	public:
-		inline Iterator getInnerIter()
+		inline RangeIterator getInnerIter()
 		{
-			return Iterator(&cells[geom.size_ghost], left, right, { geom.size });
+			return make_range(cells, left.r, right.r);
 		};
-		inline Iterator getPointIter()
+		inline RangeIterator getPointIter()
 		{
-			return Iterator(&cells[geom.size_ghost], left, { right.r + 1 }, { geom.size + 1 });
+			return make_range(cells, left.r, right.r + 1);
 		};
-		inline Iterator getIter()
+		inline RangeIterator getIter()
 		{
-			return Iterator(&cells[0], { 0 }, { totalSize }, { totalSize });
+			return make_range(cells, 0, totalSize);
 		};
 		inline std::initializer_list<Iterator> getNeighbours(const Iterator& it)
 		{
-			return{};
+			if (it == cells.begin())
+				return { it + 1 };
+			else if (it == cells.end() - 1)
+				return { it - 2 };
+			else
+				return { it - 1, it + 1 };
 		};
 		inline std::initializer_list<Iterator> getNeighboursPlus(const Iterator& it)
 		{
-			return{};
+			if (it == cells.begin())
+				return { it, it + 1 };
+			else if (it == cells.end() - 1)
+				return { it - 2, it - 1 };
+			else
+				return { it - 1, it, it + 1 };
 		};
 		
 	public:
