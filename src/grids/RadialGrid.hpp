@@ -28,7 +28,7 @@ namespace grids
 		using typename Base::DependentVariable;
 		using typename Base::Indexes;
 		typedef typename std::vector<Cell>::iterator Iterator;
-		typedef typename Range<Iterator> RangeIterator;
+		typedef Range<Iterator> RangeIterator;
 		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
 		typedef vtkSmartPointer<vtkXMLPolyDataWriter> VtkWriterPtr;
 		typedef struct 
