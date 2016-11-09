@@ -16,6 +16,7 @@
 
 #include "src/snapshot/AbstractSnapshotter.hpp"
 #include "src/grids/RadialGrid.hpp"
+#include "src/grids/variables/Quantities.hpp"
 
 template<class gridType>
 class VTKSnapshotter : public AbstractSnapshotter<gridType>
@@ -49,9 +50,9 @@ private:
 		auto points = vtkSmartPointer<vtkPoints>::New();
 
 		for (auto it : grid->getPointIter())
-			points->InsertNextPoint(it.coords.r - it.sizes.r / 2.0, 0.0, 0.0);
+			points->InsertNextPoint(quantities::getDistance(it.coords.r - it.sizes.r / 2.0), 0.0, 0.0);
 		for (auto it : grid->getPointIter())
-			points->InsertNextPoint(it.coords.r - it.sizes.r / 2.0, 0.0, -grid->geom.hz);
+			points->InsertNextPoint(quantities::getDistance(it.coords.r - it.sizes.r / 2.0), 0.0, quantities::getDistance(-grid->geom.hz));
 
 		vtk_grid->SetPoints(points);
 	};
@@ -79,7 +80,7 @@ private:
 			polygons->InsertNextCell(polygon);
 
 			for (grids::uint i = 0; i < Variable::size; i++)
-				vars[i]->InsertNextValue(it.u_next.values[i]);
+				vars[i]->InsertNextValue(Variable::getDimensioned[i](it.u_next.values[i]));
 
 			k++;
 		}

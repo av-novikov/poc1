@@ -2,11 +2,15 @@
 #define VARIABLES_HPP_
 
 #include <iostream>
+#include <functional>
 
-#include "src/grids/variables/Scalars.hpp"
+#include "src/grids/variables/Quantities.hpp"
 #include "src/grids/variables/Matrix.hpp"
 
 namespace data {
+
+using namespace quantities;
+typedef std::function<const Scalar(const Scalar)> DimensionFoo;
 
 struct Var1phaseContainer {
 	typedef Scalar DataType;
@@ -18,13 +22,14 @@ struct Var1phaseContainer {
 		};
 	};
 
-	static const std::string names[1];
-
 	static const uint size;
+	static const std::string names[1];
+	static const DimensionFoo getDimensioned [1];
 };
 
-const std::string Var1phaseContainer::names[] = {Pressure::name};
 const uint Var1phaseContainer::size = 1;
+const std::string Var1phaseContainer::names[] = { PRESSURE };
+const DimensionFoo Var1phaseContainer::getDimensioned[] = {	getPressure };
 typedef Vector<1, Var1phaseContainer> Var1phase;
 
 struct Var1phaseNITContainer {
@@ -38,13 +43,14 @@ struct Var1phaseNITContainer {
 		};
 	};
 
-	static const std::string names[2];
-
 	static const uint size;
+	static const std::string names[2];
+	static const DimensionFoo getDimensioned [2];
 };
 
 const uint Var1phaseNITContainer::size = 2;
-const std::string Var1phaseNITContainer::names[] = {Pressure::name, Temperature::name};
+const std::string Var1phaseNITContainer::names[] = {PRESSURE, TEMPERATURE};
+const DimensionFoo Var1phaseNITContainer::getDimensioned[] = { getTemperature, getPressure };
 typedef Vector<2, Var1phaseNITContainer> Var1phaseNIT;
 
 struct EmptyContainer
