@@ -1,8 +1,6 @@
 #ifndef ITERATOR_HPP_
 #define ITERATOR_HPP_
 
-#include "src/grids/variables/Matrix.hpp"
-
 namespace grids
 {
 	template <class Iter>

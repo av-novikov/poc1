@@ -6,6 +6,7 @@
 #include <cassert>
 
 #include "src/snapshot/VTKSnapshotter.hpp"
+#include "src/grids/variables/Matrix.hpp"
 
 namespace models
 {
@@ -22,7 +23,6 @@ namespace models
 		typedef typename Grid::Cell Cell;
 		typedef typename Cell::Point Point;
 		template<typename DataType> using TPoint = typename Cell::template TPoint<DataType>;
-		typedef typename data::Flux<Variable, TPoint> Flux;
 		typedef typename Grid::Iterator Iterator;
 		typedef typename Grid::RangeIterator RangeIterator;
 

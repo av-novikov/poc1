@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <iostream>
 
 #define EQUALITY_TOLERANCE 1.E-8
 
@@ -588,7 +589,7 @@ inline std::ostream& operator<<(std::ostream &os,
 		for (uint j = 0; j < N; j++)
 			os << mat(i, j) << "\t";
 
-		os << endl;
+		os << "\n";
 	}
 
 	return os;

@@ -3,13 +3,14 @@
 
 #include <vector>
 
-#include "src/models/AbstractModel.hpp"
 #include "src/utils/Interpolate.h"
 
 namespace models
 {
 	namespace properties
 	{
+		using namespace quantities;
+
 		typedef data::Scalar Scalar;
 
 		class FormationProperties

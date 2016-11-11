@@ -15,8 +15,21 @@
 #include <type_traits>
 
 #include "src/snapshot/AbstractSnapshotter.hpp"
-#include "src/grids/RadialGrid.hpp"
 #include "src/grids/variables/Quantities.hpp"
+
+namespace grids
+{
+	typedef unsigned int uint;
+	typedef double Scalar;
+
+	template<typename TVariable, typename TDependentVariable>
+	class RadialGrid;
+};
+
+namespace data
+{
+	struct EmptyContainer;
+};
 
 template<class gridType>
 class VTKSnapshotter : public AbstractSnapshotter<gridType>

@@ -1,8 +1,6 @@
 #include "src/models/Oil/Oil.hpp"
-#include "src/grids/variables/Quantities.hpp"
 
 using namespace models::properties;
-using namespace quantities;
 
 FormationProperties getFormationProps()
 {

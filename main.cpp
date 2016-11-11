@@ -2,7 +2,6 @@
 
 #include "src/models/Oil/Oil.hpp"
 #include "src/grids/RadialGrid.hpp"
-#include "src/grids/cells/RadialCell.hpp"
 
 using namespace std;
 using namespace quantities;

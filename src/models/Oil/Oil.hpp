@@ -13,7 +13,6 @@ namespace models
 		{
 		public:
 			typedef AbstractModel<gridType> Base;
-			using typename Base::Flux;
 			typedef gridType Grid;
 			typedef typename Grid::Variable Variable;
 			typedef typename Grid::DependentVariable DependentVariable;
@@ -22,7 +21,12 @@ namespace models
 			typedef typename Grid::Iterator Iterator;
 			typedef typename Grid::RangeIterator RangeIterator;
 
+			using Base::id;
+
 		protected:
+			using Base::grid;
+			using Base::snapshotter;
+
 			std::vector<properties::FormationProperties> props_sk;
 			properties::OilProperties props;
 
@@ -35,8 +39,8 @@ namespace models
 
 			inline Scalar getPermeability(const Cell& cell1, const Cell& cell2) const 
 			{
-				const Scalar k1 = cell.prop_ptr->getPermeability(cell1.coords.r);
-				const Scalar k2 = cell.prop_ptr->getPermeability(cell2.coords.r);
+				const Scalar k1 = cell1.prop_ptr->getPermeability(cell1.coords.r);
+				const Scalar k2 = cell2.prop_ptr->getPermeability(cell2.coords.r);
 				return	k1 * k2 * (cell1.sizes.r + cell2.sizes.r) /
 						(k1 * cell2.sizes.r + k2 * cell1.sizes.r);
 			};
@@ -65,7 +69,7 @@ namespace models
 
 				return getPermeability(cell1, cell2) * grid->getCommonSquare(cell1, cell2) *
 						(props.getDensity(p1) * hr2 + props.getDensity(p2) * hr1) /
-						(props.getViscosity(p1) * hr2 + props.getViscosity(p2) * hr1) *
+						(props.getVisc(p1) * hr2 + props.getVisc(p2) * hr1) *
 						2.0 * (p2 - p1) / (hr1 + hr2);
 			};
 			inline Variable& getQ(const Cell& cell) const

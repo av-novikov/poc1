@@ -25,7 +25,7 @@ struct sort_pair_second {
 inline void setDataFromFile(std::vector< std::pair<double, double> >& vec, std::string fileName)
 {
 	std::ifstream file;
-	file.open(fileName.c_str(), ifstream::in);
+	file.open(fileName.c_str(), std::ifstream::in);
 
 	double temp1, temp2;
 	while (!file.eof())
