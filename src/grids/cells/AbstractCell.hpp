@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "src/grids/variables/Variables.hpp"
+#include "src/models/ReservoirProperties.hpp"
 
 namespace units {
 	using data::uint;
@@ -33,15 +34,15 @@ namespace units {
 		Point coords;
 		// Cell sizes;
 		Point sizes;
-		// Cell faces
-		Point faces_up;
-		Point faces_down;
 
 		// Number of cell in grid
 		int num;
 
 		// Volume of cell
 		Scalar V;
+
+		// Pointer to formation properties
+		models::properties::FormationProperties* prop_ptr;
 
 		// Vectors of variables for temporary discretization
 		TVariable u_next, u_iter, u_prev;

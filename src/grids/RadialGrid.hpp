@@ -4,6 +4,7 @@
 #include "src/grids/cells/RadialCell.hpp"
 #include "src/grids/AbstractGrid.hpp"
 #include "src/grids/Iterator.hpp"
+#include "src/utils/utils.hpp"
 
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkSmartPointer.h>
@@ -80,6 +81,10 @@ namespace grids
 				return { it - 2, it - 1 };
 			else
 				return { it - 1, it, it + 1 };
+		};
+		inline Scalar getCommonSquare(const Cell& cell1, const Cell& cell2) const
+		{
+			return 2.0 * M_PI * (cell1.r + sign(cell2.num - cell1.num) * cell1.hr / 2.0) * geom.hz;
 		};
 		
 	public:

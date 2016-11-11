@@ -61,6 +61,26 @@ struct EmptyContainer
 
 const uint EmptyContainer::size = 0;
 
+struct VelocityContainer {
+	typedef Scalar DataType;
+
+	union {
+		DataType values[1];
+		struct {
+			DataType w;
+		};
+	};
+
+	static const uint size;
+	static const std::string names[1];
+	static const DimensionFoo getDimensioned[1];
+};
+
+const uint VelocityContainer::size = 2;
+const std::string VelocityContainer::names[] = { VELOCITY };
+const DimensionFoo VelocityContainer::getDimensioned[] = { getVelocity };
+typedef Vector<1, VelocityContainer> Velocity;
+
 };
 
 #endif /* VARIABLES_HPP_ */

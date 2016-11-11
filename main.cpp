@@ -1,10 +1,8 @@
 #include <iostream>
-#include <vector>
 
-#include "src/models/AbstractModel.hpp"
+#include "src/models/Oil/Oil.hpp"
 #include "src/grids/RadialGrid.hpp"
 #include "src/grids/cells/RadialCell.hpp"
-#include "src/grids/variables/Quantities.hpp"
 
 using namespace std;
 using namespace quantities;
@@ -14,7 +12,7 @@ template<typename Variable> using Grid = grids::RadialGrid<Variable>;
 int main() 
 {
 	typedef data::Var1phase Variable;
-	typedef models::AbstractModel<Grid<Variable>> Model;
+	typedef models::oil::OilModel<Grid<Variable>> Model;
 
 	Grid<Variable>::Geometry geom;
 	geom.r_w = 0.1_m;

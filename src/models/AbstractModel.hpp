@@ -62,10 +62,6 @@ namespace models
 
 			snapshotter->dump(i);
 		};
-
-		//virtual Variable& getU(const Cell& cell) const = 0;
-		//virtual Flux& getF(const Cell& cell) const = 0;
-		//virtual  Variable& getQ(const Cell& cell) const = 0;
 	};
 };
 
