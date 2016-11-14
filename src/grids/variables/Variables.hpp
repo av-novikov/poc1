@@ -12,8 +12,29 @@ namespace data {
 using namespace quantities;
 typedef std::function<const Scalar(const Scalar)> DimensionFoo;
 
+/******************************** Var1phaseJacobian ************************************/
+
+struct Var1phaseJacobianContainer {
+	typedef Scalar DataType;
+
+	union {
+		DataType values[1];
+		struct {
+			DataType p_dp;
+		};
+	};
+
+	static const uint size;
+};
+
+const uint Var1phaseJacobianContainer::size = 1;
+typedef Matrix<1, 1, Var1phaseJacobianContainer> Var1phaseJacobian;
+
+/******************************** Var1phase ************************************/
+
 struct Var1phaseContainer {
 	typedef Scalar DataType;
+	typedef Var1phaseJacobian Jacobian;
 
 	union {
 		DataType values[1];
@@ -31,6 +52,8 @@ const uint Var1phaseContainer::size = 1;
 const std::string Var1phaseContainer::names[] = { PRESSURE };
 const DimensionFoo Var1phaseContainer::getDimensioned[] = {	getPressure };
 typedef Vector<1, Var1phaseContainer> Var1phase;
+
+/********************************* Var1phaseNIT ************************************/
 
 struct Var1phaseNITContainer {
 	typedef Scalar DataType;
@@ -53,6 +76,8 @@ const std::string Var1phaseNITContainer::names[] = {PRESSURE, TEMPERATURE};
 const DimensionFoo Var1phaseNITContainer::getDimensioned[] = { getTemperature, getPressure };
 typedef Vector<2, Var1phaseNITContainer> Var1phaseNIT;
 
+/********************************* EmptyContainer ************************************/
+
 struct EmptyContainer
 {
 	static const uint size;
@@ -60,6 +85,8 @@ struct EmptyContainer
 };
 
 const uint EmptyContainer::size = 0;
+
+/********************************* VelocityContainer ************************************/
 
 struct VelocityContainer {
 	typedef Scalar DataType;

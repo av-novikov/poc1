@@ -15,6 +15,7 @@ namespace models
 			typedef AbstractModel<gridType> Base;
 			typedef gridType Grid;
 			typedef typename Grid::Variable Variable;
+			typedef typename Variable::Jacobian Jacobian;
 			typedef typename Grid::DependentVariable DependentVariable;
 			typedef typename Grid::Cell Cell;
 			typedef typename Cell::Point Point;
@@ -52,6 +53,11 @@ namespace models
 									cell.prop_ptr->getDensity(p);
 				return result;
 			};
+			inline Jacobian& getU_dp(const Cell& cell) const
+			{
+				Jacobian result;
+
+			};
 			inline Variable& getU_prev(const Cell& cell) const
 			{
 				const Scalar p = cell.u_prev.p;
@@ -60,17 +66,19 @@ namespace models
 									cell.prop_ptr->getDensity(p);
 				return result;
 			};
-			inline Variable getF_among(const Cell& cell1, const Cell& cell2) const
+			inline Variable& getF_among(const Cell& cell1, const Cell& cell2) const
 			{
 				const Scalar hr1 = cell1.sizes.r;
 				const Scalar hr2 = cell2.sizes.r;
 				const Scalar p1 = cell1.u_next.p;
 				const Scalar p2 = cell2.u_next.p;
 
-				return getPermeability(cell1, cell2) * grid->getCommonSquare(cell1, cell2) *
+				Variable result;
+				result.r = getPermeability(cell1, cell2) * grid->getCommonSquare(cell1, cell2) *
 						(props.getDensity(p1) * hr2 + props.getDensity(p2) * hr1) /
 						(props.getVisc(p1) * hr2 + props.getVisc(p2) * hr1) *
 						2.0 * (p2 - p1) / (hr1 + hr2);
+				return result;
 			};
 			inline Variable& getQ(const Cell& cell) const
 			{

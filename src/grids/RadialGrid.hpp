@@ -64,7 +64,7 @@ namespace grids
 		{
 			return make_range(cells, 0, totalSize);
 		};
-		inline std::initializer_list<Iterator> getNeighbours(const Iterator& it)
+		inline std::initializer_list<Iterator&> getNeighbours(const Iterator& it) const
 		{
 			if (it == cells.begin())
 				return { it + 1 };
@@ -73,7 +73,7 @@ namespace grids
 			else
 				return { it - 1, it + 1 };
 		};
-		inline std::initializer_list<Iterator> getNeighboursPlus(const Iterator& it)
+		inline std::initializer_list<Iterator&> getNeighboursPlus(const Iterator& it) const
 		{
 			if (it == cells.begin())
 				return { it, it + 1 };
