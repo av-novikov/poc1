@@ -4,6 +4,7 @@
 #include "src/grids/cells/RadialCell.hpp"
 #include "src/grids/AbstractGrid.hpp"
 #include "src/grids/Iterator.hpp"
+#include "src/grids/Stencil.hpp"
 #include "src/utils/utils.hpp"
 
 #include <vtkXMLPolyDataWriter.h>
@@ -29,6 +30,7 @@ namespace grids
 		using typename Base::DependentVariable;
 		using typename Base::Indexes;
 		typedef typename std::vector<Cell>::iterator Iterator;
+		typedef BaseStencil<Iterator> Stencil;
 		typedef Range<Iterator> RangeIterator;
 		typedef vtkSmartPointer<vtkPolyData> VtkGridPtr;
 		typedef vtkSmartPointer<vtkXMLPolyDataWriter> VtkWriterPtr;

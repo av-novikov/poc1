@@ -66,7 +66,7 @@ namespace models
 									cell.prop_ptr->getDensity(p);
 				return result;
 			};
-			inline Variable& getF_among(const Cell& cell1, const Cell& cell2) const
+			inline Variable& getF(const Cell& cell1, const Cell& cell2) const
 			{
 				const Scalar hr1 = cell1.sizes.r;
 				const Scalar hr2 = cell2.sizes.r;
