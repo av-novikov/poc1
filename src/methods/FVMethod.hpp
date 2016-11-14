@@ -13,8 +13,10 @@ namespace methods
 		using typename Base::Model;
 		using typename Model::Flux;
 		using typename Base::Grid;
-		using typename Grid::Iterator;
+		using typename Base::Iterator;
+		using typename Base::Stencil;
 		using typename Base::Variable;
+		using typename Base::Jacobian;
 		using typename Base::DependentVariable;
 		using typename Base::Cell;
 		using typename Base::Point;
@@ -22,8 +24,10 @@ namespace methods
 		using Base::model;
 		using Base::grid;
 		using Base::ht;
+		using Base::H;
+		using Base::jacob;
 
-		Variable& getH(const Iterator& it) const
+		inline void calcH(const Iterator& it)
 		{
 			Variable H;
 			H = model->getU(*it) - model->getU_prev(*it);
@@ -35,11 +39,14 @@ namespace methods
 
 			return H;
 		};
-		/*Variable& getJacobian(const Iterator& it) const
+		inline void calcJacobian(const Iterator& it) const
 		{
 
-		};*/
+		};
 
+		void doNextStep()
+		{
+		};
 	};
 };
 

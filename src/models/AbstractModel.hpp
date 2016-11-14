@@ -25,11 +25,13 @@ namespace models
 		template<typename DataType> using TPoint = typename Cell::template TPoint<DataType>;
 		typedef typename Grid::Iterator Iterator;
 		typedef typename Grid::RangeIterator RangeIterator;
+		typedef typename Grid::Stencil Stencil;
 
 		std::string id;
 	protected:
 		Grid* grid;
 		AbstractSnapshotter<Grid>* snapshotter;
+		Stencil* stencil;
 
 	public:
 		AbstractModel()
@@ -37,6 +39,7 @@ namespace models
 			id = "abstract";
 			grid = nullptr;
 			snapshotter = nullptr;
+			stencil = nullptr;
 		};
 
 		inline void setSnapshotter(const bool isVTK)
@@ -61,6 +64,10 @@ namespace models
 			assert(grid != nullptr);
 
 			snapshotter->dump(i);
+		};
+		void setStencil(const Stencil* _stencil)
+		{
+			stencil = _stencil;
 		};
 	};
 };

@@ -62,9 +62,9 @@ private:
 	{
 		auto points = vtkSmartPointer<vtkPoints>::New();
 
-		for (auto it : grid->getPointIter())
+		for (const auto& it : grid->getPointIter())
 			points->InsertNextPoint(quantities::getDistance(it.coords.r - it.sizes.r / 2.0), 0.0, 0.0);
-		for (auto it : grid->getPointIter())
+		for (const auto& it : grid->getPointIter())
 			points->InsertNextPoint(quantities::getDistance(it.coords.r - it.sizes.r / 2.0), 0.0, quantities::getDistance(-grid->geom.hz));
 
 		vtk_grid->SetPoints(points);
@@ -84,7 +84,7 @@ private:
 		}
 
 		int k = 0;
-		for (auto it : grid->getInnerIter())
+		for (const auto& it : grid->getInnerIter())
 		{
 			polygon->GetPointIds()->SetId(0, k);
 			polygon->GetPointIds()->SetId(1, k + 1);

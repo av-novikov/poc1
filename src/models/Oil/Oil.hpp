@@ -21,12 +21,13 @@ namespace models
 			typedef typename Cell::Point Point;
 			typedef typename Grid::Iterator Iterator;
 			typedef typename Grid::RangeIterator RangeIterator;
-
+			using typename Base::Stencil;
 			using Base::id;
 
 		protected:
 			using Base::grid;
 			using Base::snapshotter;
+			using Base::stencil;
 
 			std::vector<properties::FormationProperties> props_sk;
 			properties::OilProperties props;
