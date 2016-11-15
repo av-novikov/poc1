@@ -12,12 +12,13 @@ namespace methods
 		typedef ModelType Model;
 		typedef typename Model::Grid Grid;
 		using typename Grid::Variable;
-		using typename Variable::Jacobian;
 		using typename Grid::DependentVariable;
 		using typename Grid::Cell;
 		using typename Grid::Iterator;
 		using typename Grid::Stencil;
 		using typename Cell::Point;
+		typedef data::Matrix<Variable::size, Variable::size * Stencil::size> Jacobian;
+		typedef data::Vector<Variable::size * Stencil::size> Deviation;
 
 	protected:
 		Grid* grid;
@@ -26,6 +27,7 @@ namespace methods
 		Scalar ht;
 
 		Variable H;
+		Deviation dx;
 		Jacobian jacob;
 	};
 };

@@ -12,29 +12,10 @@ namespace data {
 using namespace quantities;
 typedef std::function<const Scalar(const Scalar)> DimensionFoo;
 
-/******************************** Var1phaseJacobian ************************************/
-
-struct Var1phaseJacobianContainer {
-	typedef Scalar DataType;
-
-	union {
-		DataType values[1];
-		struct {
-			DataType p_dp;
-		};
-	};
-
-	static const uint size;
-};
-
-const uint Var1phaseJacobianContainer::size = 1;
-typedef Matrix<1, 1, Var1phaseJacobianContainer> Var1phaseJacobian;
-
 /******************************** Var1phase ************************************/
 
 struct Var1phaseContainer {
 	typedef Scalar DataType;
-	typedef Var1phaseJacobian Jacobian;
 
 	union {
 		DataType values[1];

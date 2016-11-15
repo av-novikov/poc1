@@ -15,13 +15,13 @@ namespace models
 			typedef AbstractModel<gridType> Base;
 			typedef gridType Grid;
 			typedef typename Grid::Variable Variable;
-			typedef typename Variable::Jacobian Jacobian;
 			typedef typename Grid::DependentVariable DependentVariable;
 			typedef typename Grid::Cell Cell;
+			typedef typename Grid::Stencil Stencil;
+			//typedef data::Matrix<Variable::size, Variable::size * Stencil::size> Jacobian;
 			typedef typename Cell::Point Point;
 			typedef typename Grid::Iterator Iterator;
 			typedef typename Grid::RangeIterator RangeIterator;
-			using typename Base::Stencil;
 			using Base::id;
 
 		protected:
@@ -54,11 +54,11 @@ namespace models
 									cell.prop_ptr->getDensity(p);
 				return result;
 			};
-			inline Jacobian& getU_dp(const Cell& cell) const
+			/*inline Jacobian& getU_dp(const Cell& cell) const
 			{
 				Jacobian result;
 
-			};
+			};*/
 			inline Variable& getU_prev(const Cell& cell) const
 			{
 				const Scalar p = cell.u_prev.p;
